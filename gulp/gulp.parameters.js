@@ -28,7 +28,7 @@
         indexLocation : './app/index.html',
 
         // Dist
-        distPath: './dist',
+        distFolderPath: './dist',
         distFileName: 'application',
         viewDistFileName: 'templates',
         libraryFileName: 'libraries'

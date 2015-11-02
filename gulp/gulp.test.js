@@ -68,7 +68,7 @@
         function runKarmaOnDistCode(configuration) {
             var files = getBowerDependencies()
                 .concat(parameters.jsTestFiles)
-                .concat('./dist/' + parameters.distFileName + '.min.js');
+                .concat(path.join(parameters.distFolderPath, parameters.distFileName + '.min.js'));
             return runKarmaOnCode(files, configuration);
         }
 
