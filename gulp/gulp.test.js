@@ -5,7 +5,7 @@
 
         var gulp = require('gulp'),
             wiredep = require('wiredep'),
-            karma = require('karma').server,
+            karma = require('karma'),
             runSequence = require('run-sequence'),
             path = require('path');
 
@@ -60,8 +60,8 @@
 
         function runKarmaOnSourceCode(configuration) {
             var files = getBowerDependencies()
-                .concat(parameters.jsTestFiles)
-                .concat(parameters.jsFiles);
+                .concat(parameters.jsFiles)
+                .concat(parameters.jsTestFiles);
             return runKarmaOnCode(files, configuration);
         }
 
@@ -77,7 +77,9 @@
             configuration.singleRun = configuration.action === 'run';
             configuration.files = files;
             configuration.exclude = parameters.jsStartupFiles;
-            karma.start(configuration);
+
+            var server = new karma.Server(configuration);
+            server.start();
         }
-    };
-}(module, require))
+    }
+}(module, require));
