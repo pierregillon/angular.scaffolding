@@ -5,12 +5,15 @@
         .module('main')
         .controller('mainController', controller);
 
-    controller.$inject = [];
+    controller.$inject = ['uiGmapGoogleMapApi'];
 
-    function controller() {
+    function controller(uiGmapGoogleMapApi) {
         var self = this;
 
-        self.message = "hello world";
+        uiGmapGoogleMapApi.then(function(){
+            self.message = "Google map is ready";
+            self.map = { center: { latitude: 48.8566140, longitude: 2.3522219 }, zoom: 15 };
+        });
     }
 
 })();

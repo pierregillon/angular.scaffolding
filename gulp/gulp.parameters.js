@@ -5,6 +5,7 @@
         // js
         jsFiles: [
             './app/js/**/*.module.js',
+            './app/js/**/*.configuration.js',
             './app/js/**/*.controller.js',
             './app/js/**/*.directive.js',
             './app/js/**/*.service.js'
