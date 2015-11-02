@@ -10,9 +10,6 @@
             './app/js/**/*.directive.js',
             './app/js/**/*.service.js'
         ],
-        jsStartupFiles: [
-            './app/js/startup.js'
-        ],
         jsTestFiles: [
             './app/js/**/*.spec.js'
         ],

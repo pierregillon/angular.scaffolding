@@ -76,7 +76,7 @@
             configuration.configFile = path.resolve(parameters.karmaFilePath);
             configuration.singleRun = configuration.action === 'run';
             configuration.files = files;
-            configuration.exclude = parameters.jsStartupFiles;
+            configuration.exclude = [];
 
             var server = new karma.Server(configuration);
             server.start();

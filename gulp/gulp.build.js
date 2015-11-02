@@ -22,7 +22,6 @@
         gulp.task('js', function () {
             var jsFilesToBuild = []
                 .concat(parameters.jsFiles)
-                .concat(parameters.jsStartupFiles)
                 .concat(concatForeach('!', parameters.jsTestFiles));
             return gulp
                 .src(jsFilesToBuild)
@@ -35,7 +34,6 @@
         gulp.task('js-min', function () {
             var jsFilesToBuild = []
                 .concat(parameters.jsFiles)
-                .concat(parameters.jsStartupFiles)
                 .concat(concatForeach('!', parameters.jsTestFiles));
 
             return gulp
@@ -157,7 +155,7 @@
             runSequence('clean', 'js', 'css', 'dep', 'html', 'link', callback);
         });
         gulp.task('build-w', ['build'], function () {
-            gulp.watch([parameters.jsFiles, parameters.jsStartupFiles], ['js']);
+            gulp.watch([parameters.jsFiles], ['js']);
             gulp.watch([parameters.viewFiles], ['html']);
             gulp.watch([parameters.cssFiles], ['css']);
             gulp.watch([parameters.indexLocation], ['link']);
