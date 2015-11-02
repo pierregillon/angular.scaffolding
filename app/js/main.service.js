@@ -1,4 +1,4 @@
-(function () {
+(function (angular) {
     'use strict';
 
     angular
@@ -8,8 +8,6 @@
     service.$inject = [];
 
     function service() {
-        var self = this;
-
     }
 
-})();
+})(window.angular);

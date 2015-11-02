@@ -8,10 +8,11 @@
             cssmin = require('gulp-cssmin'),
             uglify = require('gulp-uglify'),
             inject = require("gulp-inject"),
-            debug = require("gulp-debug"),
+            debug = require('gulp-debug'),
+            eslint = require('gulp-eslint'),
             wiredep = require('wiredep'),
             help = require('gulp-task-listing'),
-            minifyHtml = require("gulp-minify-html"),
+            minifyHtml = require('gulp-minify-html'),
             runSequence = require('run-sequence'),
             streamqueue = require('streamqueue'),
             del = require('del'),
@@ -25,6 +26,9 @@
                 .concat(concatForeach('!', parameters.jsTestFiles));
             return gulp
                 .src(jsFilesToBuild)
+                .pipe(eslint())
+                .pipe(eslint.format())
+                .pipe(eslint.failAfterError())
                 .pipe(concat(parameters.distFileName + '.js'))
                 .pipe(gulp.dest(parameters.distFolderPath));
         });
@@ -33,8 +37,12 @@
                 .concat(parameters.jsFiles)
                 .concat(parameters.jsStartupFiles)
                 .concat(concatForeach('!', parameters.jsTestFiles));
+
             return gulp
                 .src(jsFilesToBuild)
+                .pipe(eslint())
+                .pipe(eslint.format())
+                .pipe(eslint.failAfterError())
                 .pipe(concat(parameters.distFileName + '.min.js'))
                 .pipe(uglify())
                 .pipe(gulp.dest(parameters.distFolderPath));

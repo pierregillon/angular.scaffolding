@@ -1,4 +1,4 @@
-(function () {
+(function (angular) {
     'use strict';
 
     angular
@@ -11,9 +11,9 @@
         var self = this;
 
         uiGmapGoogleMapApi.then(function(){
-            self.message = "Google map is ready";
+            self.message = 'Google map is ready';
             self.map = { center: { latitude: 48.8566140, longitude: 2.3522219 }, zoom: 15 };
         });
     }
 
-})();
+})(window.angular);

@@ -11,10 +11,12 @@
   "devDependencies": {
     "bower": "^1.6.5",
     "del": "^2.0.2",
+    "eslint": "^1.8.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-cssmin": "^0.1.7",
     "gulp-debug": "^2.1.2",
+    "gulp-eslint": "^1.0.0",
     "gulp-inject": "^3.0.0",
     "gulp-minify-html": "^1.0.4",
     "gulp-task-listing": "^1.0.1",
