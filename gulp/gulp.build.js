@@ -11,10 +11,12 @@
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
             rename = require('gulp-rename'),
+            templateCache = require('gulp-angular-templatecache'),
             wiredep = require('wiredep'),
             minifyHtml = require('gulp-minify-html'),
             runSequence = require('run-sequence'),
             streamqueue = require('streamqueue'),
+            addStream = require('add-stream'),
             del = require('del'),
             path = require('path');
 
@@ -22,12 +24,14 @@
         gulp.task('js', 'Merge javascript application files in a single one to the dist folder.', [], function () {
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
+                .withTemplateCache()
                 .withExtension('.js')
                 .build();
         }, 'test');
         gulp.task('js-min', 'Merge and minify javascript application files in a single one to the dist folder.', [], function () {
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
+                .withTemplateCache()
                 .withMinification()
                 .withExtension('.min.js')
                 .build();
@@ -38,17 +42,22 @@
 
             self.withSyntaxValidation = function () {
                 self.shouldValidateSyntax = true;
-                return this;
+                return self;
             };
 
             self.withMinification = function () {
                 self.shouldMinifyCss = true;
-                return this;
+                return self;
+            };
+
+            self.withTemplateCache = function () {
+                self.shouldInjectTemplateCache = true;
+                return self;
             };
 
             self.withExtension = function (extension) {
                 self.fileExtension = extension;
-                return this;
+                return self;
             };
 
             self.build = function () {
@@ -56,7 +65,8 @@
                     .concat(parameters.jsFiles)
                     .concat(concatForeach('!', parameters.jsTestFiles));
 
-                var process = gulp.src(jsFilesToBuild);
+                var process = gulp
+                    .src(jsFilesToBuild);
 
                 if (self.shouldValidateSyntax) {
                     process = process
@@ -65,47 +75,23 @@
                         .pipe(eslint.failAfterError());
                 }
 
+                if (self.shouldInjectTemplateCache) {
+                    var templateCacheProcess = gulp
+                        .src(parameters.viewFiles)
+                        .pipe(templateCache());
+
+                    process = process
+                        .pipe(addStream.obj(templateCacheProcess))
+                }
+
                 process = process
-                    .pipe(concat(parameters.distFileName + self.fileExtension))
+                    .pipe(concat(parameters.distFileName + self.fileExtension));
 
                 if (self.shouldMinifyCss) {
                     process = process.pipe(uglify());
                 }
 
                 return process.pipe(gulp.dest(parameters.distFolderPath));
-            };
-        }
-
-        // ----- Html
-        gulp.task('html', 'Move html views in the dist/templates folder.', [], function () {
-            return new HtmlFileAggregationTaskBuilder().build();
-        });
-        gulp.task('html-min', 'Move and minify html views in the dist/templates folder.', [], function () {
-            return new HtmlFileAggregationTaskBuilder()
-                .withMinification()
-                .build();
-        });
-
-        function HtmlFileAggregationTaskBuilder() {
-            var self = this;
-
-            self.withMinification = function () {
-                self.shouldMinifyHtml = true;
-                return this;
-            };
-
-            self.build = function () {
-                var process = gulp.src(parameters.viewFiles);
-                if (self.shouldMinifyHtml) {
-                    process = process.pipe(minifyHtml({
-                        empty: true,
-                        spare: true,
-                        quotes: true
-                    }));
-                }
-                return process
-                    .pipe(rename({dirname: ''}))
-                    .pipe(gulp.dest(parameters.distFolderPath + '/templates'));
             };
         }
 
@@ -279,20 +265,20 @@
 
         // ----- Global build
         gulp.task('build', 'Build the entire application in the dist folder.', [], function (callback) {
-            runSequence('clean', 'js', 'css', 'dep', 'html', 'link', callback);
+            runSequence('clean', 'js', 'css', 'dep', 'link', callback);
         });
         gulp.task('build-w', 'Build the entire application in the dist folder and watch changes.', ['build'], function () {
             gulp.watch([parameters.jsFiles], ['js']);
-            gulp.watch([parameters.viewFiles], ['html']);
+            gulp.watch([parameters.viewFiles], ['js']); // template cache is injected in js bundle.
             gulp.watch([parameters.cssFiles], ['css']);
             gulp.watch([parameters.indexLocation], ['link']);
         });
         gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
-            runSequence('clean', 'js-min', 'css-min', 'dep-min', 'html-min', 'link-min', callback);
+            runSequence('clean', 'js-min', 'css-min', 'dep-min', 'link-min', callback);
         });
         gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
             gulp.watch([parameters.jsFiles], ['js-min']);
-            gulp.watch([parameters.viewFiles], ['html-min']);
+            gulp.watch([parameters.viewFiles], ['js-min']); // template cache is injected in js bundle.
             gulp.watch([parameters.cssFiles], ['css-min']);
             gulp.watch([parameters.indexLocation], ['link-min']);
         });

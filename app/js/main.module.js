@@ -3,6 +3,7 @@
 
     angular
         .module('main', [
+            'templates',
             'map',
             'ui.router'
         ]);

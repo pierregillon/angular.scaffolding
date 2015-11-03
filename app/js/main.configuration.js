@@ -12,7 +12,7 @@
         $stateProvider
             .state('home', {
                 url: '/',
-                templateUrl: 'templates/map.controller.html',
+                templateUrl: 'map/map.controller.html',
                 controller: 'mapController',
                 controllerAs: 'controller'
             });
