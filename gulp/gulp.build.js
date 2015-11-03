@@ -19,128 +19,256 @@
             path = require('path');
 
         // ----- Javascript : Creation of a single file with all the javascript application.
-        gulp.task('js', function () {
-            var jsFilesToBuild = []
-                .concat(parameters.jsFiles)
-                .concat(concatForeach('!', parameters.jsTestFiles));
-            return gulp
-                .src(jsFilesToBuild)
-                .pipe(eslint())
-                .pipe(eslint.format())
-                .pipe(eslint.failAfterError())
-                .pipe(concat(parameters.distFileName + '.js'))
-                .pipe(gulp.dest(parameters.distFolderPath));
-        });
+        gulp.task('js' , function () {
+            return new JavascriptFileAggregationTaskBuilder()
+                .withSyntaxValidation()
+                .withExtension('.js')
+                .build();
+        }, 'test');
         gulp.task('js-min', function () {
-            var jsFilesToBuild = []
-                .concat(parameters.jsFiles)
-                .concat(concatForeach('!', parameters.jsTestFiles));
-
-            return gulp
-                .src(jsFilesToBuild)
-                .pipe(eslint())
-                .pipe(eslint.format())
-                .pipe(eslint.failAfterError())
-                .pipe(concat(parameters.distFileName + '.min.js'))
-                .pipe(uglify())
-                .pipe(gulp.dest(parameters.distFolderPath));
+            return new JavascriptFileAggregationTaskBuilder()
+                .withSyntaxValidation()
+                .withMinification()
+                .withExtension('.min.js')
+                .build();
         });
+
+        function JavascriptFileAggregationTaskBuilder() {
+            var self = this;
+
+            self.withSyntaxValidation = function () {
+                self.shouldValidateSyntax = true;
+                return this;
+            };
+
+            self.withMinification = function () {
+                self.shouldMinifyCss = true;
+                return this;
+            };
+
+            self.withExtension = function (extension) {
+                self.fileExtension = extension;
+                return this;
+            };
+
+            self.build = function () {
+                var jsFilesToBuild = []
+                    .concat(parameters.jsFiles)
+                    .concat(concatForeach('!', parameters.jsTestFiles));
+
+                var process = gulp.src(jsFilesToBuild);
+
+                if (self.shouldValidateSyntax) {
+                    process = process
+                        .pipe(eslint())
+                        .pipe(eslint.format())
+                        .pipe(eslint.failAfterError());
+                }
+
+                process = process
+                    .pipe(concat(parameters.distFileName + self.fileExtension))
+
+                if (self.shouldMinifyCss) {
+                    process = process.pipe(uglify());
+                }
+
+                return process.pipe(gulp.dest(parameters.distFolderPath));
+            };
+        }
 
         // ----- Html
         gulp.task('html', function () {
-            var htmlFilesToBuild = []
-                .concat(parameters.viewFiles)
-                .concat(parameters.indexLocation);
-            return gulp
-                .src(htmlFilesToBuild)
-                .pipe(gulp.dest(parameters.distFolderPath + '/templates'));
+            return new HtmlFileAggregationTaskBuilder().build();
         });
         gulp.task('html-min', function () {
-            var htmlFilesToBuild = []
-                .concat(parameters.viewFiles)
-                .concat(parameters.indexLocation);
-            return gulp
-                .src(htmlFilesToBuild)
-                .pipe(minifyHtml({
-                    empty: true,
-                    spare: true,
-                    quotes: true
-                }))
-                .pipe(gulp.dest(parameters.distFolderPath + '/templates'));
+            return new HtmlFileAggregationTaskBuilder()
+                .withMinification()
+                .build();
         });
+
+        function HtmlFileAggregationTaskBuilder() {
+            var self = this;
+
+            self.withMinification = function () {
+                self.shouldMinifyHtml = true;
+                return this;
+            };
+
+            self.build = function () {
+                var process = gulp.src(parameters.viewFiles);
+                if (self.shouldMinifyHtml) {
+                    process = process.pipe(minifyHtml({
+                        empty: true,
+                        spare: true,
+                        quotes: true
+                    }));
+                }
+                return process.pipe(gulp.dest(parameters.distFolderPath + '/templates'));
+            };
+        }
 
         // ----- Styles : Creation of a single file with all the css of the application.
         gulp.task('css', function () {
-            return gulp
-                .src([parameters.cssFiles, '!' + parameters.minCssFiles])
-                .pipe(concat(parameters.distFileName + '.css'))
-                .pipe(gulp.dest(parameters.distFolderPath));
+            return new CssFileAggregationTaskBuilder()
+                .withExtension('.css')
+                .build();
         });
         gulp.task('css-min', function () {
-            return gulp
-                .src([parameters.cssFiles, '!' + parameters.minCssFiles])
-                .pipe(cssmin())
-                .pipe(concat(parameters.distFileName + '.min.css'))
-                .pipe(gulp.dest(parameters.distFolderPath));
+            return new CssFileAggregationTaskBuilder()
+                .withMinification()
+                .withExtension('.min.css')
+                .build();
         });
+
+        function CssFileAggregationTaskBuilder() {
+            var self = this;
+
+            self.withMinification = function () {
+                self.shouldMinifyCss = true;
+                return this;
+            };
+
+            self.withExtension = function (extension) {
+                self.fileExtension = extension;
+                return this;
+            };
+
+            self.build = function () {
+                var cssFilesToAggregate = [
+                    parameters.cssFiles,
+                    '!' + parameters.minCssFiles
+                ];
+
+                var process = gulp.src(cssFilesToAggregate);
+                if (self.shouldMinifyCss) {
+                    process = process.pipe(cssmin())
+                }
+                return process
+                    .pipe(concat(parameters.distFileName + self.fileExtension))
+                    .pipe(gulp.dest(parameters.distFolderPath));
+            };
+        }
 
         // ----- Dependencies : Creation of a single file with all the bower dependencies (js / css).
         gulp.task('dep', function () {
-            var js = gulp
-                .src(getJsBowerDependencies())
-                .pipe(concat(parameters.libraryFileName + '.js'));
+            var jsTask = new JavascriptLibraryFileAggregationTaskBuilder()
+                .withExtension('.js')
+                .build();
 
-            var css = gulp
-                .src(getCssBowerDependencies())
-                .pipe(concat(parameters.libraryFileName + '.css'));
+            var cssTask = new CssLibraryFileAggregationTaskBuilder()
+                .withExtension('.css')
+                .build();
 
-            return streamqueue({objectMode: true}, js, css)
+            return streamqueue({objectMode: true}, jsTask, cssTask)
                 .pipe(gulp.dest(parameters.distFolderPath));
         });
         gulp.task('dep-min', function () {
-            var js = gulp
-                .src(getJsBowerDependencies())
-                .pipe(uglify())
-                .pipe(concat(parameters.libraryFileName + '.min.js'));
+            var jsTask = new JavascriptLibraryFileAggregationTaskBuilder()
+                .withMinification()
+                .withExtension('.min.js')
+                .build();
 
-            var css = gulp
-                .src(getCssBowerDependencies())
-                .pipe(cssmin())
-                .pipe(concat(parameters.libraryFileName + '.min.css'));
+            var cssTask = new CssLibraryFileAggregationTaskBuilder()
+                .withMinification()
+                .withExtension('.min.css')
+                .build();
 
-            return streamqueue({objectMode: true}, js, css)
+            return streamqueue({objectMode: true}, jsTask, cssTask)
                 .pipe(gulp.dest(parameters.distFolderPath));
         });
+
+        function JavascriptLibraryFileAggregationTaskBuilder() {
+            var self = this;
+
+            self.withMinification = function () {
+                self.shouldMinifyCss = true;
+                return this;
+            };
+
+            self.withExtension = function (extension) {
+                self.fileExtension = extension;
+                return this;
+            };
+
+            self.build = function () {
+                var jsProcess = gulp.src(getJsBowerDependencies());
+                if (self.shouldMinifyCss) {
+                    jsProcess = jsProcess.pipe(uglify());
+                }
+                return jsProcess.pipe(concat(parameters.libraryFileName + self.fileExtension));
+            };
+
+            function getJsBowerDependencies() {
+                return getBowerDependencies(wiredep().js);
+            }
+        }
+
+        function CssLibraryFileAggregationTaskBuilder() {
+            var self = this;
+
+            self.withMinification = function () {
+                self.shouldMinifyCss = true;
+                return this;
+            };
+
+            self.withExtension = function (extension) {
+                self.fileExtension = extension;
+                return this;
+            };
+
+            self.build = function () {
+                var cssProcess = gulp.src(getCssBowerDependencies());
+                if (self.shouldMinifyCss) {
+                    cssProcess = cssProcess.pipe(cssmin());
+                }
+                return cssProcess.pipe(concat(parameters.libraryFileName + self.fileExtension));
+            };
+
+            function getCssBowerDependencies() {
+                return getBowerDependencies(wiredep().css);
+            }
+        }
 
         // ----- Link : Reference the javascript, style and library files in the index.html.
         gulp.task('link', function () {
-            var filesToLink = gulp.src([
-                path.join(parameters.distFolderPath, parameters.libraryFileName + '.js'),
-                path.join(parameters.distFolderPath, parameters.libraryFileName + '.css'),
-                path.join(parameters.distFolderPath, parameters.distFileName + '.css'),
-                path.join(parameters.distFolderPath, parameters.distFileName + '.js')
-            ], {read: false});
-
-            return gulp
-                .src(parameters.indexLocation)
-                .pipe(gulp.dest(parameters.distFolderPath))
-                .pipe(inject(filesToLink, {addRootSlash: false, relative: true}))
-                .pipe(gulp.dest(parameters.distFolderPath));
+            return new InjectAggregatedFilesTaskBuilder().build();
         });
         gulp.task('link-min', function () {
-            var filesToLink = gulp.src([
-                path.join(parameters.distFolderPath, parameters.libraryFileName + '.min.js'),
-                path.join(parameters.distFolderPath, parameters.distFileName + '.min.js'),
-                path.join(parameters.distFolderPath, parameters.libraryFileName + '.min.css'),
-                path.join(parameters.distFolderPath, parameters.distFileName + '.min.css')
-            ], {read: false});
-
-            return gulp
-                .src(parameters.indexLocation)
-                .pipe(gulp.dest(parameters.distFolderPath))
-                .pipe(inject(filesToLink, {addRootSlash: false, relative: true}))
-                .pipe(gulp.dest(parameters.distFolderPath));
+            return new InjectAggregatedFilesTaskBuilder()
+                .withMinifiedFiles()
+                .build();
         });
+
+        function InjectAggregatedFilesTaskBuilder() {
+            var self = this;
+
+            self.withMinifiedFiles = function () {
+                self.useMinifiedFiles = true;
+                return this;
+            };
+
+            self.build = function () {
+                var jsExtension = '.js';
+                var cssExtension = '.css';
+                if (self.useMinifiedFiles) {
+                    jsExtension = '.min.js';
+                    cssExtension = '.min.css';
+                }
+
+                var files = [
+                    path.join(parameters.distFolderPath, parameters.libraryFileName + jsExtension),
+                    path.join(parameters.distFolderPath, parameters.distFileName + jsExtension),
+                    path.join(parameters.distFolderPath, parameters.libraryFileName + cssExtension),
+                    path.join(parameters.distFolderPath, parameters.distFileName + cssExtension)
+                ];
+                var filesToLink = gulp.src(files, {read: false});
+                return gulp
+                    .src(parameters.indexLocation)
+                    .pipe(gulp.dest(parameters.distFolderPath))
+                    .pipe(inject(filesToLink, {addRootSlash: false, relative: true}))
+                    .pipe(gulp.dest(parameters.distFolderPath));
+            };
+        }
 
         // ----- Clean : Remove all files in the dist folder.
         gulp.task('clean', function () {
@@ -171,14 +299,6 @@
         });
 
         // ----- Utils
-        function getJsBowerDependencies() {
-            return getBowerDependencies(wiredep().js);
-        }
-
-        function getCssBowerDependencies() {
-            return getBowerDependencies(wiredep().css);
-        }
-
         function getBowerDependencies(values) {
             var dependencies = [];
             if (values) {
@@ -198,6 +318,6 @@
             });
             return results;
         }
-    };
+    }
 
-}(module, require))
+}(module, require));
