@@ -3,7 +3,7 @@
 
     function buildDefinition(parameters) {
 
-        var gulp = require('gulp'),
+        var gulp = require('gulp-help')(require('gulp')),
             concat = require('gulp-concat'),
             cssmin = require('gulp-cssmin'),
             uglify = require('gulp-uglify'),
@@ -11,7 +11,6 @@
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
             wiredep = require('wiredep'),
-            help = require('gulp-task-listing'),
             minifyHtml = require('gulp-minify-html'),
             runSequence = require('run-sequence'),
             streamqueue = require('streamqueue'),
@@ -19,13 +18,13 @@
             path = require('path');
 
         // ----- Javascript : Creation of a single file with all the javascript application.
-        gulp.task('js' , function () {
+        gulp.task('js', 'Merge javascript application files in a single one to the dist folder.', [], function () {
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
                 .withExtension('.js')
                 .build();
         }, 'test');
-        gulp.task('js-min', function () {
+        gulp.task('js-min', 'Merge and minify javascript application files in a single one to the dist folder.', [], function () {
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
                 .withMinification()
@@ -77,10 +76,10 @@
         }
 
         // ----- Html
-        gulp.task('html', function () {
+        gulp.task('html', 'Move html views in the dist/templates folder.', [], function () {
             return new HtmlFileAggregationTaskBuilder().build();
         });
-        gulp.task('html-min', function () {
+        gulp.task('html-min', 'Move and minify html views in the dist/templates folder.', [], function () {
             return new HtmlFileAggregationTaskBuilder()
                 .withMinification()
                 .build();
@@ -108,12 +107,12 @@
         }
 
         // ----- Styles : Creation of a single file with all the css of the application.
-        gulp.task('css', function () {
+        gulp.task('css', 'Merge the application css files in a single one to the dist folder.', [], function () {
             return new CssFileAggregationTaskBuilder()
                 .withExtension('.css')
                 .build();
         });
-        gulp.task('css-min', function () {
+        gulp.task('css-min', 'Merge and minify the application css files in a single one to the dist folder', [], function () {
             return new CssFileAggregationTaskBuilder()
                 .withMinification()
                 .withExtension('.min.css')
@@ -150,7 +149,7 @@
         }
 
         // ----- Dependencies : Creation of a single file with all the bower dependencies (js / css).
-        gulp.task('dep', function () {
+        gulp.task('dep', 'Merge the library javascript files in a single one to the dist folder.', [], function () {
             var jsTask = new JavascriptLibraryFileAggregationTaskBuilder()
                 .withExtension('.js')
                 .build();
@@ -162,7 +161,7 @@
             return streamqueue({objectMode: true}, jsTask, cssTask)
                 .pipe(gulp.dest(parameters.distFolderPath));
         });
-        gulp.task('dep-min', function () {
+        gulp.task('dep-min', 'Merge and minify the library javascript files in a single one to the dist folder.', [], function () {
             var jsTask = new JavascriptLibraryFileAggregationTaskBuilder()
                 .withMinification()
                 .withExtension('.min.js')
@@ -230,10 +229,10 @@
         }
 
         // ----- Link : Reference the javascript, style and library files in the index.html.
-        gulp.task('link', function () {
+        gulp.task('link', 'Copy the root html file to the dist folder and inject built dependencies.', [], function () {
             return new InjectAggregatedFilesTaskBuilder().build();
         });
-        gulp.task('link-min', function () {
+        gulp.task('link-min', 'Copy the root html file to the dist folder and inject minified built dependencies.', [], function () {
             return new InjectAggregatedFilesTaskBuilder()
                 .withMinifiedFiles()
                 .build();
@@ -271,27 +270,24 @@
         }
 
         // ----- Clean : Remove all files in the dist folder.
-        gulp.task('clean', function () {
+        gulp.task('clean', 'Clean the dist folder.', [], function () {
             return del(parameters.distFolderPath + '/*');
         });
 
-        // ----- Help
-        gulp.task('help', help);
-
         // ----- Global build
-        gulp.task('build', function (callback) {
+        gulp.task('build', 'Build the entire application in the dist folder.', [], function (callback) {
             runSequence('clean', 'js', 'css', 'dep', 'html', 'link', callback);
         });
-        gulp.task('build-w', ['build'], function () {
+        gulp.task('build-w', 'Build the entire application in the dist folder and watch changes.', ['build'], function () {
             gulp.watch([parameters.jsFiles], ['js']);
             gulp.watch([parameters.viewFiles], ['html']);
             gulp.watch([parameters.cssFiles], ['css']);
             gulp.watch([parameters.indexLocation], ['link']);
         });
-        gulp.task('build-min', function (callback) {
+        gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
             runSequence('clean', 'js-min', 'css-min', 'dep-min', 'html-min', 'link-min', callback);
         });
-        gulp.task('build-min-w', ['build-min'], function () {
+        gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
             gulp.watch([parameters.jsFiles], ['js-min']);
             gulp.watch([parameters.viewFiles], ['html-min']);
             gulp.watch([parameters.cssFiles], ['css-min']);

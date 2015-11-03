@@ -3,44 +3,44 @@
 
     function buildDefinition(parameters) {
 
-        var gulp = require('gulp'),
+        var gulp = require('gulp-help')(require('gulp')),
             wiredep = require('wiredep'),
             karma = require('karma'),
             runSequence = require('run-sequence'),
             path = require('path');
 
         // ----- Tasks
-        gulp.task('test', function() {
+        gulp.task('test', 'Start a single run of all unit tests.', [], function() {
             return runKarmaOnSourceCode({
                 action: 'run'
             });
         });
-        gulp.task('test-spec', function() {
+        gulp.task('test-spec', 'Start a single run of all unit tests with the specification view.', [], function() {
             return runKarmaOnSourceCode({
                 action: 'run',
                 reporters: ['spec']
             });
         });
-        gulp.task('test-debug', function() {
+        gulp.task('test-debug', 'Start a debug session of all unit tests.', [], function() {
             return runKarmaOnSourceCode({
                 action: 'watch',
                 browsers: ['Chrome']
             });
         });
-        gulp.task('test-w', function() {
+        gulp.task('test-w', 'Start a continuous run of all unit tests.', [], function() {
             return runKarmaOnSourceCode({
                 action: 'watch'
             });
         });
 
-        gulp.task('test-dist', function() {
+        gulp.task('test-current-dist', false, [], function() {
             return runKarmaOnDistCode({
                 action: 'run'
             });
         });
 
-        gulp.task('build-test-dist', function(callback) {
-            runSequence('build-min', 'test-dist', callback);
+        gulp.task('test-dist', 'Start a single run of all unit tests, based on the full minified built application in the dist folder.', [], function(callback) {
+            runSequence('build-min', 'test-current-dist', callback);
         });
 
         // ----- Utils
