@@ -8,7 +8,8 @@
             './app/js/**/*.configuration.js',
             './app/js/**/*.controller.js',
             './app/js/**/*.directive.js',
-            './app/js/**/*.service.js'
+            './app/js/**/*.service.js',
+            './app/js/**/*.repository.js'
         ],
         jsTestFiles: [
             './app/js/**/*.spec.js'
