@@ -42,9 +42,9 @@
 
         it('should build marker from display when calling getMarkers.', function (done) {
             var data = [
-                {lat: 23, long: 44},
-                {lat: 34, long: 10},
-                {lat: 12.3, long: 33.8}
+                {id: 1, lat: 23, long: 44},
+                {id: 2, lat: 34, long: 10},
+                {id: 3, lat: 12.3, long: 33.8}
             ];
 
             displayRepository.getDisplays = sinon.stub();
@@ -54,9 +54,9 @@
                 .getMarkers()
                 .then(function (markers) {
                     expect(markers).to.eql([
-                        {latitude: 23, longitude: 44},
-                        {latitude: 34, longitude: 10},
-                        {latitude: 12.3, longitude: 33.8}
+                        {id: 1, coords: {latitude: 23, longitude: 44}, options: {}, events:{}},
+                        {id: 2, coords: {latitude: 34, longitude: 10}, options: {}, events:{}},
+                        {id: 3, coords: {latitude: 12.3, longitude: 33.8}, options: {}, events:{}}
                     ]);
                     done();
                 });

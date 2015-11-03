@@ -16,8 +16,13 @@
                 .then(function (displays) {
                     return _.map(displays, function (element) {
                         return {
-                            latitude: element.lat,
-                            longitude: element.long
+                            id: element.id,
+                            coords: {
+                                latitude: element.lat,
+                                longitude: element.long
+                            },
+                            options: {},
+                            events: {}
                         };
                     });
                 });

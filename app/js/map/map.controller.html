@@ -1,4 +1,9 @@
 <div>
     {{controller.message}}
-    <ui-gmap-google-map center="controller.map.center" zoom="controller.map.zoom"></ui-gmap-google-map>
+    <ui-gmap-google-map center="controller.map.center" zoom="controller.map.zoom">
+        <ui-gmap-markers models="controller.markers"
+                         coords="'coords'"
+                         icon="'icon'">
+        </ui-gmap-markers>
+    </ui-gmap-google-map>
 </div>

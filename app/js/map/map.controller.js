@@ -5,14 +5,18 @@
         .module('map')
         .controller('mapController', controller);
 
-    controller.$inject = ['uiGmapGoogleMapApi'];
+    controller.$inject = ['uiGmapGoogleMapApi', 'markerService'];
 
-    function controller(uiGmapGoogleMapApi) {
+    function controller(googleMapApi, markerService) {
         var self = this;
 
-        uiGmapGoogleMapApi.then(function(){
+        googleMapApi.then(function () {
             self.message = 'Google map is ready';
-            self.map = { center: { latitude: 48.8566140, longitude: 2.3522219 }, zoom: 15 };
+            self.map = {center: {latitude: 48.854614, longitude: 2.347600}, zoom: 16};
+
+            markerService.getMarkers().then(function (markers) {
+                self.markers = markers;
+            });
         });
     }
 
