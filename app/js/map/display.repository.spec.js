@@ -1,4 +1,4 @@
-(function (expect) {
+(function () {
     'use strict';
 
     describe('A display repository', function () {
@@ -18,4 +18,4 @@
             expect(displayRepository.getDisplays).to.be.a('function');
         });
     });
-})(chai.expect);
+})();

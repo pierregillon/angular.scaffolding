@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "bower": "^1.6.5",
+    "chai-as-promised": "^5.1.0",
     "del": "^2.0.2",
     "eslint": "^1.8.0",
     "gulp": "^3.9.0",
@@ -27,6 +28,7 @@
     "karma-chrome-launcher": "^0.2.1",
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
+    "karma-sinon-chai": "^1.1.0",
     "karma-spec-reporter": "0.0.22",
     "phantomjs": "^1.9.18",
     "run-sequence": "^1.1.4",
