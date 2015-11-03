@@ -21,7 +21,7 @@
 
         // html
         viewFiles: [
-            './app/views/**/*.html'
+            './app/js/**/*.html'
         ],
         indexLocation : './app/index.html',
 

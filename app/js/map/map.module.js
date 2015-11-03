@@ -2,8 +2,7 @@
     'use strict';
 
     angular
-        .module('main', [
-            'map',
-            'ui.router'
+        .module('map', [
+            'uiGmapgoogle-maps'
         ]);
 })(window.angular);

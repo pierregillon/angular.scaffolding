@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('main')
-        .controller('mainController', controller);
+        .module('map')
+        .controller('mapController', controller);
 
     controller.$inject = ['uiGmapGoogleMapApi'];
 

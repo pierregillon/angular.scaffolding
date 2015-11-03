@@ -7,10 +7,7 @@
 </head>
 <body>
 <div data-ng-app="main">
-    <div data-ng-controller="mainController as controller">
-        {{controller.message}}
-        <ui-gmap-google-map center="controller.map.center" zoom="controller.map.zoom"></ui-gmap-google-map>
-    </div>
+    <div data-ui-view ></div>
 </div>
 <!-- inject:js -->
 <!-- endinject -->

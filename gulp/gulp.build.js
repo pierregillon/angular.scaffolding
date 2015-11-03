@@ -10,6 +10,7 @@
             inject = require("gulp-inject"),
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
+            rename = require('gulp-rename'),
             wiredep = require('wiredep'),
             minifyHtml = require('gulp-minify-html'),
             runSequence = require('run-sequence'),
@@ -102,7 +103,9 @@
                         quotes: true
                     }));
                 }
-                return process.pipe(gulp.dest(parameters.distFolderPath + '/templates'));
+                return process
+                    .pipe(rename({dirname: ''}))
+                    .pipe(gulp.dest(parameters.distFolderPath + '/templates'));
             };
         }
 
