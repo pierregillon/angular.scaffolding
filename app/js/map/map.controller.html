@@ -4,6 +4,9 @@
         <ui-gmap-markers models="controller.markers"
                          coords="'coords'"
                          icon="'icon'">
+            <ui-gmap-windows show="show">
+                <div ng-non-bindable>{{id}}</div>
+            </ui-gmap-windows>
         </ui-gmap-markers>
     </ui-gmap-google-map>
 </div>
