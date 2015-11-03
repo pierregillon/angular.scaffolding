@@ -1,4 +1,4 @@
-(function (angular) {
+(function (angular, _) {
     'use strict';
 
     angular
@@ -11,8 +11,17 @@
         var self = this;
 
         self.getMarkers = function () {
-            displayRepository.getDisplays();
+            return displayRepository
+                .getDisplays()
+                .then(function (displays) {
+                    return _.map(displays, function (element) {
+                        return {
+                            latitude: element.lat,
+                            longitude: element.long
+                        };
+                    });
+                });
         };
     }
 
-})(window.angular);
+})(window.angular, window._);
