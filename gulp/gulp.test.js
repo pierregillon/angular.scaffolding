@@ -61,7 +61,9 @@
         function runKarmaOnSourceCode(configuration) {
             var files = getBowerDependencies()
                 .concat(parameters.jsFiles)
+                .concat(parameters.viewFiles)
                 .concat(parameters.jsTestFiles);
+
             return runKarmaOnCode(files, configuration);
         }
 

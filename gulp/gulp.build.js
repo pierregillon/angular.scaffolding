@@ -11,7 +11,10 @@
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
             rename = require('gulp-rename'),
-            templateCache = require('gulp-angular-templatecache'),
+            header = require('gulp-header'),
+            footer = require('gulp-footer'),
+            beautify = require('gulp-beautify'),
+            ngHtml2js = require('gulp-ng-html2js'),
             wiredep = require('wiredep'),
             minifyHtml = require('gulp-minify-html'),
             runSequence = require('run-sequence'),
@@ -76,16 +79,10 @@
                 }
 
                 if (self.shouldInjectTemplateCache) {
-                    var templateCacheProcess = gulp
-                        .src(parameters.viewFiles)
-                        .pipe(templateCache());
-
-                    process = process
-                        .pipe(addStream.obj(templateCacheProcess))
+                    process = process.pipe(addStream.obj(getTemplateCacheProcess()))
                 }
 
-                process = process
-                    .pipe(concat(parameters.distFileName + self.fileExtension));
+                process = process.pipe(concat(parameters.distFileName + self.fileExtension));
 
                 if (self.shouldMinifyJs) {
                     process = process.pipe(uglify());
@@ -93,6 +90,26 @@
 
                 return process.pipe(gulp.dest(parameters.distFolderPath));
             };
+
+            // ----- Internal logics
+
+            function getTemplateCacheProcess() {
+                var headerStr = '(function(angular){\'use strict\';angular.module(\'${moduleName}\', []).run(processTemplates);processTemplates.$inject = [\'$templateCache\'];function processTemplates($templateCache){';
+                var footerStr = '}})(window.angular);\r\n';
+
+                var templateCacheProcess = gulp
+                    .src(parameters.viewFiles)
+                    .pipe(minifyHtml({}))
+                    .pipe(ngHtml2js({
+                        moduleName: 'templates',
+                        template: '$templateCache.put(\'<%= template.url %>\',\'<%= template.escapedContent %>\');'
+                    }))
+                    .pipe(concat('concat.js'))
+                    .pipe(header(headerStr, {moduleName: 'templates'}))
+                    .pipe(footer(footerStr))
+                    .pipe(beautify());
+                return templateCacheProcess;
+            }
         }
 
         // ----- Styles : Creation of a single file with all the css of the application.
