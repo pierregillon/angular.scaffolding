@@ -4,7 +4,6 @@
     function buildDefinition(parameters) {
 
         var gulp = require('gulp-help')(require('gulp')),
-            wiredep = require('wiredep'),
             karma = require('karma'),
             runSequence = require('run-sequence'),
             path = require('path'),
@@ -50,28 +49,15 @@
         });
 
         // ----- Utils
-        function getBowerDependencies() {
-            var dependencies = [];
-            wiredep({
-                devDependencies: true,
-                dependencies: true
-            }).js.forEach(function(dependency) {
-                var index = dependency.indexOf('bower_components');
-                var wellFormattedDependency = dependency.substr(index, dependency.length - index).split("\\").join('/');
-                dependencies.push('./' + wellFormattedDependency);
-            });
-            return dependencies;
-        }
         function runKarmaOnSourceCode(configuration) {
-            var files = getBowerDependencies()
+            var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
                 .concat(parameters.jsFiles)
                 .concat('dist/templates.module.js')
                 .concat(parameters.jsTestFiles);
-
             return runKarmaOnCode(files, configuration);
         }
         function runKarmaOnDistCode(configuration) {
-            var files = getBowerDependencies()
+            var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
                 .concat(parameters.jsTestFiles)
                 .concat(path.join(parameters.distFolderPath, parameters.distFileName + '.min.js'));
             return runKarmaOnCode(files, configuration);

@@ -10,7 +10,6 @@
             inject = require("gulp-inject"),
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
-            wiredep = require('wiredep'),
             runSequence = require('run-sequence'),
             streamqueue = require('streamqueue'),
             addStream = require('add-stream'),
@@ -173,16 +172,12 @@
             };
 
             self.build = function () {
-                var jsProcess = gulp.src(getJsBowerDependencies());
+                var jsProcess = gulp.src(utils.bower.getJsLibraries({devDependencies: false, dependencies: true}));
                 if (self.shouldMinifyJs) {
                     jsProcess = jsProcess.pipe(uglify());
                 }
                 return jsProcess.pipe(concat(parameters.libraryFileName + self.fileExtension));
             };
-
-            function getJsBowerDependencies() {
-                return getBowerDependencies(wiredep().js);
-            }
         }
 
         function CssLibraryFileAggregationTaskBuilder() {
@@ -199,16 +194,12 @@
             };
 
             self.build = function () {
-                var cssProcess = gulp.src(getCssBowerDependencies());
+                var cssProcess = gulp.src(utils.bower.getCssLibraries({devDependencies: false, dependencies: true}));
                 if (self.shouldMinifyJs) {
                     cssProcess = cssProcess.pipe(cssmin());
                 }
                 return cssProcess.pipe(concat(parameters.libraryFileName + self.fileExtension));
             };
-
-            function getCssBowerDependencies() {
-                return getBowerDependencies(wiredep().css);
-            }
         }
 
         // ----- Link : Reference the javascript, style and library files in the index.html.
@@ -278,18 +269,6 @@
         });
 
         // ----- Utils
-        function getBowerDependencies(values) {
-            var dependencies = [];
-            if (values) {
-                values.forEach(function (dependency) {
-                    var index = dependency.indexOf('bower_components');
-                    var wellFormattedDependency = dependency.substr(index, dependency.length - index).split("\\").join('/');
-                    dependencies.push(wellFormattedDependency);
-                });
-            }
-            return dependencies;
-        }
-
         function concatForeach(character, array) {
             var results = [];
             array.forEach(function (path) {
