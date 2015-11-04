@@ -20,24 +20,6 @@ module.exports = function (config) {
         // list of files to exclude
         exclude: [],
 
-        plugins: [
-            'karma-sinon-chai',
-            'karma-phantomjs-launcher',
-            'karma-chrome-launcher',
-            'karma-jasmine',
-            'karma-ng-html2js-preprocessor',
-            'karma-spec-reporter'
-        ],
-
-        preprocessors: {
-            'app/js/**/*.html': ['ng-html2js']
-        },
-
-        ngHtml2JsPreprocessor: {
-            stripPrefix: 'app/js/',
-            moduleName: 'templates'
-        },
-
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
