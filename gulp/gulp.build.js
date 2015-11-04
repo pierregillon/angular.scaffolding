@@ -46,7 +46,7 @@
             };
 
             self.withMinification = function () {
-                self.shouldMinifyCss = true;
+                self.shouldMinifyJs = true;
                 return self;
             };
 
@@ -87,7 +87,7 @@
                 process = process
                     .pipe(concat(parameters.distFileName + self.fileExtension));
 
-                if (self.shouldMinifyCss) {
+                if (self.shouldMinifyJs) {
                     process = process.pipe(uglify());
                 }
 
@@ -112,7 +112,7 @@
             var self = this;
 
             self.withMinification = function () {
-                self.shouldMinifyCss = true;
+                self.shouldMinifyJs = true;
                 return this;
             };
 
@@ -128,7 +128,7 @@
                 ];
 
                 var process = gulp.src(cssFilesToAggregate);
-                if (self.shouldMinifyCss) {
+                if (self.shouldMinifyJs) {
                     process = process.pipe(cssmin())
                 }
                 return process
@@ -169,7 +169,7 @@
             var self = this;
 
             self.withMinification = function () {
-                self.shouldMinifyCss = true;
+                self.shouldMinifyJs = true;
                 return this;
             };
 
@@ -180,7 +180,7 @@
 
             self.build = function () {
                 var jsProcess = gulp.src(getJsBowerDependencies());
-                if (self.shouldMinifyCss) {
+                if (self.shouldMinifyJs) {
                     jsProcess = jsProcess.pipe(uglify());
                 }
                 return jsProcess.pipe(concat(parameters.libraryFileName + self.fileExtension));
@@ -195,7 +195,7 @@
             var self = this;
 
             self.withMinification = function () {
-                self.shouldMinifyCss = true;
+                self.shouldMinifyJs = true;
                 return this;
             };
 
@@ -206,7 +206,7 @@
 
             self.build = function () {
                 var cssProcess = gulp.src(getCssBowerDependencies());
-                if (self.shouldMinifyCss) {
+                if (self.shouldMinifyJs) {
                     cssProcess = cssProcess.pipe(cssmin());
                 }
                 return cssProcess.pipe(concat(parameters.libraryFileName + self.fileExtension));
