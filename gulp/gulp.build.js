@@ -97,7 +97,7 @@
                 var headerStr = '(function(angular){\'use strict\';angular.module(\'${moduleName}\', []).run(processTemplates);processTemplates.$inject = [\'$templateCache\'];function processTemplates($templateCache){';
                 var footerStr = '}})(window.angular);\r\n';
 
-                var templateCacheProcess = gulp
+                return gulp
                     .src(parameters.viewFiles)
                     .pipe(minifyHtml({}))
                     .pipe(ngHtml2js({
@@ -108,7 +108,6 @@
                     .pipe(header(headerStr, {moduleName: 'templates'}))
                     .pipe(footer(footerStr))
                     .pipe(beautify());
-                return templateCacheProcess;
             }
         }
 

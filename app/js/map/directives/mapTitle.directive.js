@@ -7,7 +7,7 @@
 
     function directive() {
         return {
-            templateUrl: 'map/mapTitle.directive.html',
+            templateUrl: 'map/directives/mapTitle.directive.html',
             restrict: 'E',
             scope: {
                 title: '@message'
