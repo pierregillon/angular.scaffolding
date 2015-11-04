@@ -10,18 +10,13 @@
             inject = require("gulp-inject"),
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
-            rename = require('gulp-rename'),
-            header = require('gulp-header'),
-            footer = require('gulp-footer'),
-            beautify = require('gulp-beautify'),
-            ngHtml2js = require('gulp-ng-html2js'),
             wiredep = require('wiredep'),
-            minifyHtml = require('gulp-minify-html'),
             runSequence = require('run-sequence'),
             streamqueue = require('streamqueue'),
             addStream = require('add-stream'),
             del = require('del'),
-            path = require('path');
+            path = require('path'),
+            utils = require('./gulp.utils');
 
         // ----- Javascript : Creation of a single file with all the javascript application.
         gulp.task('js', 'Merge javascript application files in a single one to the dist folder.', [], function () {
@@ -79,7 +74,9 @@
                 }
 
                 if (self.shouldInjectTemplateCache) {
-                    process = process.pipe(addStream.obj(getTemplateCacheProcess()))
+                    var getTemplateCacheProcess =
+                        utils.templateCache.aggregateTemplates(parameters.viewFiles, 'templates', 'templates.module.js');
+                    process = process.pipe(addStream.obj(getTemplateCacheProcess));
                 }
 
                 process = process.pipe(concat(parameters.distFileName + self.fileExtension));
@@ -90,25 +87,6 @@
 
                 return process.pipe(gulp.dest(parameters.distFolderPath));
             };
-
-            // ----- Internal logics
-
-            function getTemplateCacheProcess() {
-                var headerStr = '(function(angular){\'use strict\';angular.module(\'${moduleName}\', []).run(processTemplates);processTemplates.$inject = [\'$templateCache\'];function processTemplates($templateCache){';
-                var footerStr = '}})(window.angular);\r\n';
-
-                return gulp
-                    .src(parameters.viewFiles)
-                    .pipe(minifyHtml({}))
-                    .pipe(ngHtml2js({
-                        moduleName: 'templates',
-                        template: '$templateCache.put(\'<%= template.url %>\',\'<%= template.escapedContent %>\');'
-                    }))
-                    .pipe(concat('concat.js'))
-                    .pipe(header(headerStr, {moduleName: 'templates'}))
-                    .pipe(footer(footerStr))
-                    .pipe(beautify());
-            }
         }
 
         // ----- Styles : Creation of a single file with all the css of the application.

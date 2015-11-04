@@ -4,16 +4,11 @@
     function buildDefinition(parameters) {
 
         var gulp = require('gulp-help')(require('gulp')),
-            header = require('gulp-header'),
-            footer = require('gulp-footer'),
-            concat = require('gulp-concat'),
-            beautify = require('gulp-beautify'),
-            ngHtml2js = require('gulp-ng-html2js'),
             wiredep = require('wiredep'),
-            minifyHtml = require('gulp-minify-html'),
             karma = require('karma'),
             runSequence = require('run-sequence'),
-            path = require('path');
+            path = require('path'),
+            utils = require('./gulp.utils');
 
         // ----- Tasks
         gulp.task('test', 'Start a single run of all unit tests.', ['generateTemplates'], function() {
@@ -44,20 +39,8 @@
 
         // ----- SubTasks
         gulp.task('generateTemplates', false, [], function () {
-            var headerStr = '(function(angular){\'use strict\';angular.module(\'${moduleName}\', []).run(processTemplates);processTemplates.$inject = [\'$templateCache\'];function processTemplates($templateCache){';
-            var footerStr = '}})(window.angular);\r\n';
-
-            return gulp
-                .src(parameters.viewFiles)
-                .pipe(minifyHtml({}))
-                .pipe(ngHtml2js({
-                    moduleName: 'templates',
-                    template: '$templateCache.put(\'<%= template.url %>\',\'<%= template.escapedContent %>\');'
-                }))
-                .pipe(concat('templates.module.js'))
-                .pipe(header(headerStr, {moduleName: 'templates'}))
-                .pipe(footer(footerStr))
-                .pipe(beautify())
+            return utils.templateCache
+                .aggregateTemplates(parameters.viewFiles, 'templates', 'templates.module.js')
                 .pipe(gulp.dest(parameters.distFolderPath));
         });
         gulp.task('test-current-dist', false, [], function () {
