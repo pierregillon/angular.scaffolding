@@ -11,11 +11,17 @@
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
             runSequence = require('run-sequence'),
-            streamqueue = require('streamqueue'),
-            addStream = require('add-stream'),
             del = require('del'),
             path = require('path'),
-            utils = require('./gulp.utils');
+            utils = require('./gulp.utils'),
+
+            // for templates merge
+            header = require('gulp-header'),
+            footer = require('gulp-footer'),
+            concat = require('gulp-concat'),
+            beautify = require('gulp-beautify'),
+            ngHtml2js = require('gulp-ng-html2js'),
+            minifyHtml = require('gulp-minify-html');
 
         /**
          * @description Build tasks : Merge all the files of the application and dependencies to the dist folder and
@@ -25,6 +31,7 @@
             runSequence(
                 'clean',
                 'merge-js-files-to-dist',
+                'merge-template-files-to-dist',
                 'merge-css-files-to-dist',
                 'merge-libraries-to-dist',
                 'reference-dist-files-to-index',
@@ -32,7 +39,7 @@
         });
         gulp.task('build-w', 'Build the entire application in the dist folder and watch changes.', ['build'], function () {
             gulp.watch([parameters.jsFiles], ['merge-js-files-to-dist']);
-            gulp.watch([parameters.viewFiles], ['merge-js-files-to-dist']); // template cache is injected in js bundle.
+            gulp.watch([parameters.viewFiles], ['merge-template-files-to-dist']);
             gulp.watch([parameters.cssFiles], ['merge-css-files-to-dist']);
             gulp.watch([parameters.indexLocation], ['reference-dist-files-to-index']);
         });
@@ -40,6 +47,7 @@
             runSequence(
                 'clean',
                 'merge-minify-js-files-to-dist',
+                'merge-minify-template-files-to-dist',
                 'merge-minify-css-files-to-dist',
                 'merge-minify-libraries-to-dist',
                 'reference-minified-dist-files-to-index',
@@ -47,7 +55,7 @@
         });
         gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
             gulp.watch([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
-            gulp.watch([parameters.viewFiles], ['merge-minify-js-files-to-dist']); // template cache is injected in js bundle.
+            gulp.watch([parameters.viewFiles], ['merge-minify-template-files-to-dist']);
             gulp.watch([parameters.cssFiles], ['merge-minify-css-files-to-dist']);
             gulp.watch([parameters.indexLocation], ['reference-minified-dist-files-to-index']);
         });
@@ -67,7 +75,6 @@
             // Merge javascript application files in a single one to the dist folder.
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
-                .withTemplateCache()
                 .withExtension('.js')
                 .build();
         }, {aliases: ['js']});
@@ -75,7 +82,6 @@
             // Merge and minify javascript application files in a single one to the dist folder.
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
-                .withTemplateCache()
                 .withMinification()
                 .withExtension('.min.js')
                 .build();
@@ -91,11 +97,6 @@
 
             self.withMinification = function () {
                 self.shouldMinifyJs = true;
-                return self;
-            };
-
-            self.withTemplateCache = function () {
-                self.shouldInjectTemplateCache = true;
                 return self;
             };
 
@@ -119,12 +120,6 @@
                         .pipe(eslint.failAfterError());
                 }
 
-                if (self.shouldInjectTemplateCache) {
-                    var getTemplateCacheProcess =
-                        utils.templateCache.aggregateTemplates(parameters.viewFiles, 'templates', 'templates.module.js');
-                    process = process.pipe(addStream.obj(getTemplateCacheProcess));
-                }
-
                 process = process.pipe(concat(parameters.distFileName + self.fileExtension));
 
                 if (self.shouldMinifyJs) {
@@ -133,6 +128,61 @@
 
                 return process.pipe(gulp.dest(parameters.distFolderPath));
             };
+        }
+
+        /**
+         * @description Template tasks : Aggregate all the html template files of the application (controller + directive)
+         * to a single file in the dist folder.
+         */
+        gulp.task('merge-template-files-to-dist', false, [], function () {
+            return new TemplateFileAggregationTaskBuilder()
+                .withExtension('.js')
+                .build();
+        }, {aliases: ['template']});
+        gulp.task('merge-minify-template-files-to-dist', false, [], function () {
+            return new TemplateFileAggregationTaskBuilder()
+                .withMinification()
+                .withExtension('.min.js')
+                .build();
+        }, {aliases: ['template-min']});
+
+        function TemplateFileAggregationTaskBuilder() {
+            var self = this;
+
+            self.withMinification = function () {
+                self.shouldMinifyCode = true;
+                return self;
+            };
+
+            self.withExtension = function (extension) {
+                self.fileExtension = extension;
+                return self;
+            };
+
+            self.build = function () {
+                var headerStr = '(function(angular){\'use strict\';angular.module(\'${moduleName}\', []).run(processTemplates);processTemplates.$inject = [\'$templateCache\'];function processTemplates($templateCache){';
+                var footerStr = '}})(window.angular);\r\n';
+
+                var process = gulp
+                    .src(parameters.viewFiles)
+                    .pipe(minifyHtml({}))
+                    .pipe(ngHtml2js({
+                        moduleName: 'templates',
+                        template: '$templateCache.put(\'<%= template.url %>\',\'<%= template.escapedContent %>\');'
+                    }))
+                    .pipe(concat(parameters.templateFileName + self.fileExtension))
+                    .pipe(header(headerStr, {moduleName: 'templates'}))
+                    .pipe(footer(footerStr));
+
+                if (self.shouldMinifyCode) {
+                    process = process.pipe(uglify())
+                }
+                else {
+                    process = process.pipe(beautify())
+                }
+
+                return process.pipe(gulp.dest(parameters.distFolderPath));
+            }
         }
 
         /**
@@ -297,6 +347,7 @@
 
                 var files = [
                     path.join(parameters.distFolderPath, parameters.libraryFileName + jsExtension),
+                    path.join(parameters.distFolderPath, parameters.templateFileName + jsExtension),
                     path.join(parameters.distFolderPath, parameters.distFileName + jsExtension),
                     path.join(parameters.distFolderPath, parameters.libraryFileName + cssExtension),
                     path.join(parameters.distFolderPath, parameters.distFileName + cssExtension)

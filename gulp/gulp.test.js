@@ -12,17 +12,17 @@
         /**
          * @description Test tasks : Launch unit tests in karma with different modes.
          */
-        gulp.task('test', 'Start a single run of all unit tests.', ['generateTemplates'], function() {
+        gulp.task('test', 'Start a single run of all unit tests.', ['merge-template-files-to-dist'], function() {
             return runKarmaOnSourceCode({
                 action: 'run'
             });
         });
-        gulp.task('test-w', 'Start a continuous run of all unit tests.', ['generateTemplates'], function() {
+        gulp.task('test-w', 'Start a continuous run of all unit tests.', ['merge-template-files-to-dist'], function() {
             return runKarmaOnSourceCode({
                 action: 'watch'
             });
         });
-        gulp.task('test-debug', 'Start a debug session of all unit tests.', ['generateTemplates'], function() {
+        gulp.task('test-debug', 'Start a debug session of all unit tests.', ['merge-template-files-to-dist'], function() {
             return runKarmaOnSourceCode({
                 action: 'watch',
                 browsers: ['Chrome']
@@ -33,11 +33,6 @@
         });
 
         // ----- SubTasks
-        gulp.task('generateTemplates', false, [], function () {
-            return utils.templateCache
-                .aggregateTemplates(parameters.viewFiles, 'templates', 'templates.module.js')
-                .pipe(gulp.dest(parameters.distFolderPath));
-        });
         gulp.task('test-current-dist', false, [], function () {
             return runKarmaOnDistCode({
                 action: 'run'
@@ -48,14 +43,15 @@
         function runKarmaOnSourceCode(configuration) {
             var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
                 .concat(parameters.jsFiles)
-                .concat('dist/templates.module.js')
+                .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '.js'))
                 .concat(parameters.jsTestFiles);
             return runKarmaOnCode(files, configuration);
         }
         function runKarmaOnDistCode(configuration) {
             var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
                 .concat(parameters.jsTestFiles)
-                .concat(path.join(parameters.distFolderPath, parameters.distFileName + '.min.js'));
+                .concat(path.join(parameters.distFolderPath, parameters.distFileName + '.min.js'))
+                .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '.min.js'));
             return runKarmaOnCode(files, configuration);
         }
         function runKarmaOnCode(files, configuration) {

@@ -29,7 +29,7 @@
         // Dist
         distFolderPath: './dist',
         distFileName: 'application',
-        viewDistFileName: 'templates',
+        templateFileName: 'templates',
         libraryFileName: 'libraries'
     };
 
