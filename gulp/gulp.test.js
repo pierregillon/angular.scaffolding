@@ -50,7 +50,7 @@
         function runKarmaOnDistCode(configuration) {
             var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
                 .concat(parameters.jsTestFiles)
-                .concat(path.join(parameters.distFolderPath, parameters.distFileName + '.min.js'))
+                .concat(path.join(parameters.distFolderPath, parameters.applicationFileName + '.min.js'))
                 .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '.min.js'));
             return runKarmaOnCode(files, configuration);
         }

@@ -120,7 +120,7 @@
                         .pipe(eslint.failAfterError());
                 }
 
-                process = process.pipe(concat(parameters.distFileName + self.fileExtension));
+                process = process.pipe(concat(parameters.applicationFileName + self.fileExtension));
 
                 if (self.shouldMinifyJs) {
                     process = process.pipe(uglify());
@@ -227,7 +227,7 @@
                     process = process.pipe(cssmin())
                 }
                 return process
-                    .pipe(concat(parameters.distFileName + self.fileExtension))
+                    .pipe(concat(parameters.applicationFileName + self.fileExtension))
                     .pipe(gulp.dest(parameters.distFolderPath));
             };
         }
@@ -348,9 +348,9 @@
                 var files = [
                     path.join(parameters.distFolderPath, parameters.libraryFileName + jsExtension),
                     path.join(parameters.distFolderPath, parameters.templateFileName + jsExtension),
-                    path.join(parameters.distFolderPath, parameters.distFileName + jsExtension),
+                    path.join(parameters.distFolderPath, parameters.applicationFileName + jsExtension),
                     path.join(parameters.distFolderPath, parameters.libraryFileName + cssExtension),
-                    path.join(parameters.distFolderPath, parameters.distFileName + cssExtension)
+                    path.join(parameters.distFolderPath, parameters.applicationFileName + cssExtension)
                 ];
                 var filesToReference = gulp.src(files, {read: false});
                 return gulp

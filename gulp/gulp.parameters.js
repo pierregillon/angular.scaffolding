@@ -28,7 +28,7 @@
 
         // Dist
         distFolderPath: './dist',
-        distFileName: 'application',
+        applicationFileName: 'application',
         templateFileName: 'templates',
         libraryFileName: 'libraries'
     };
