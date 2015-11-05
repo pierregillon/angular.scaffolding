@@ -46,7 +46,7 @@ The tools used are :
 
     gulp build
     
-7 - Host you **./dist/index.html**, your application works.
+7 - Host your **./dist/index.html** : your application works.
 
 8 - When you want to try the final distributed version, build the minified application
 
