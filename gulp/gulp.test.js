@@ -9,27 +9,23 @@
             path = require('path'),
             utils = require('./gulp.utils');
 
-        // ----- Tasks
+        /**
+         * @description Test tasks : Launch unit tests in karma with different modes.
+         */
         gulp.task('test', 'Start a single run of all unit tests.', ['generateTemplates'], function() {
             return runKarmaOnSourceCode({
                 action: 'run'
             });
         });
-        gulp.task('test-spec', 'Start a single run of all unit tests with the specification view.', ['generateTemplates'], function() {
+        gulp.task('test-w', 'Start a continuous run of all unit tests.', ['generateTemplates'], function() {
             return runKarmaOnSourceCode({
-                action: 'run',
-                reporters: ['spec']
+                action: 'watch'
             });
         });
         gulp.task('test-debug', 'Start a debug session of all unit tests.', ['generateTemplates'], function() {
             return runKarmaOnSourceCode({
                 action: 'watch',
                 browsers: ['Chrome']
-            });
-        });
-        gulp.task('test-w', 'Start a continuous run of all unit tests.', ['generateTemplates'], function() {
-            return runKarmaOnSourceCode({
-                action: 'watch'
             });
         });
         gulp.task('test-dist', 'Start a single run of all unit tests, based on the full minified built application in the dist folder.', [], function(callback) {
