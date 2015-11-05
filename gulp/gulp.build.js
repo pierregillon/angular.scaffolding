@@ -10,12 +10,13 @@
             inject = require("gulp-inject"),
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
+            rename = require('gulp-rename'),
             runSequence = require('run-sequence'),
             del = require('del'),
             path = require('path'),
             utils = require('./gulp.utils'),
 
-            // for templates merge
+        // for templates merge
             header = require('gulp-header'),
             footer = require('gulp-footer'),
             concat = require('gulp-concat'),
@@ -75,7 +76,6 @@
             // Merge javascript application files in a single one to the dist folder.
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
-                .withExtension('.js')
                 .build();
         }, {aliases: ['js']});
         gulp.task('merge-minify-js-files-to-dist', false, [], function () {
@@ -83,7 +83,6 @@
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
                 .withMinification()
-                .withExtension('.min.js')
                 .build();
         }, {aliases: ['js-min']});
 
@@ -97,11 +96,6 @@
 
             self.withMinification = function () {
                 self.shouldMinifyJs = true;
-                return self;
-            };
-
-            self.withExtension = function (extension) {
-                self.fileExtension = extension;
                 return self;
             };
 
@@ -120,10 +114,14 @@
                         .pipe(eslint.failAfterError());
                 }
 
-                process = process.pipe(concat(parameters.applicationFileName + self.fileExtension));
-
                 if (self.shouldMinifyJs) {
-                    process = process.pipe(uglify());
+                    process = process
+                        .pipe(concat(parameters.applicationFileName + '.min.js'))
+                        .pipe(uglify());
+                }
+                else {
+                    process = process
+                        .pipe(concat(parameters.applicationFileName + '.js'));
                 }
 
                 return process.pipe(gulp.dest(parameters.distFolderPath));
@@ -135,14 +133,11 @@
          * to a single file in the dist folder.
          */
         gulp.task('merge-template-files-to-dist', false, [], function () {
-            return new TemplateFileAggregationTaskBuilder()
-                .withExtension('.js')
-                .build();
+            return new TemplateFileAggregationTaskBuilder().build();
         }, {aliases: ['template']});
         gulp.task('merge-minify-template-files-to-dist', false, [], function () {
             return new TemplateFileAggregationTaskBuilder()
                 .withMinification()
-                .withExtension('.min.js')
                 .build();
         }, {aliases: ['template-min']});
 
@@ -151,11 +146,6 @@
 
             self.withMinification = function () {
                 self.shouldMinifyCode = true;
-                return self;
-            };
-
-            self.withExtension = function (extension) {
-                self.fileExtension = extension;
                 return self;
             };
 
@@ -170,15 +160,19 @@
                         moduleName: parameters.templateModuleName,
                         template: '$templateCache.put(\'<%= template.url %>\',\'<%= template.escapedContent %>\');'
                     }))
-                    .pipe(concat(parameters.templateFileName + self.fileExtension))
+                    .pipe(concat('temp'))
                     .pipe(header(headerStr, {moduleName: parameters.templateModuleName}))
                     .pipe(footer(footerStr));
 
                 if (self.shouldMinifyCode) {
-                    process = process.pipe(uglify())
+                    process = process
+                        .pipe(uglify())
+                        .pipe(rename(parameters.templateFileName + '.min.js'));
                 }
                 else {
-                    process = process.pipe(beautify())
+                    process = process
+                        .pipe(beautify())
+                        .pipe(rename(parameters.templateFileName + '.js'));
                 }
 
                 return process.pipe(gulp.dest(parameters.distFolderPath));
@@ -191,15 +185,12 @@
          */
         gulp.task('merge-css-files-to-dist', false, [], function () {
             // Merge the application css files in a single one to the dist folder.
-            return new CssFileAggregationTaskBuilder()
-                .withExtension('.css')
-                .build();
+            return new CssFileAggregationTaskBuilder().build();
         }, {aliases: ['css']});
         gulp.task('merge-minify-css-files-to-dist', false, [], function () {
             // Merge and minify the application css files in a single one to the dist folder
             return new CssFileAggregationTaskBuilder()
                 .withMinification()
-                .withExtension('.min.css')
                 .build();
         }, {aliases: ['css-min']});
 
@@ -211,11 +202,6 @@
                 return this;
             };
 
-            self.withExtension = function (extension) {
-                self.fileExtension = extension;
-                return this;
-            };
-
             self.build = function () {
                 var cssFilesToAggregate = [
                     parameters.cssFiles,
@@ -224,11 +210,15 @@
 
                 var process = gulp.src(cssFilesToAggregate);
                 if (self.shouldMinifyJs) {
-                    process = process.pipe(cssmin())
+                    process = process
+                        .pipe(concat(parameters.applicationFileName + '.min.css'))
+                        .pipe(cssmin());
                 }
-                return process
-                    .pipe(concat(parameters.applicationFileName + self.fileExtension))
-                    .pipe(gulp.dest(parameters.distFolderPath));
+                else {
+                    process = process
+                        .pipe(concat(parameters.applicationFileName + '.css'));
+                }
+                return process.pipe(gulp.dest(parameters.distFolderPath));
             };
         }
 
@@ -239,28 +229,22 @@
          */
         gulp.task('merge-js-libraries-to-dist', false, [], function () {
             // Merge the library javascript files in a single one to the dist folder.
-            return new JavascriptLibraryFileAggregationTaskBuilder()
-                .withExtension('.js')
-                .build();
+            return new JavascriptLibraryFileAggregationTaskBuilder().build();
         }, {aliases: ['js-dep']});
         gulp.task('merge-css-libraries-to-dist', false, [], function () {
             // Merge the library css files in a single one to the dist folder.
-            return new CssLibraryFileAggregationTaskBuilder()
-                .withExtension('.css')
-                .build();
+            return new CssLibraryFileAggregationTaskBuilder().build();
         }, {aliases: ['css-dep']});
         gulp.task('merge-minify-js-libraries-to-dist', false, [], function () {
             // Merge and minify the library javascript files in a single one to the dist folder.
             return new JavascriptLibraryFileAggregationTaskBuilder()
                 .withMinification()
-                .withExtension('.min.js')
                 .build();
         }, {aliases: ['js-dep-min']});
         gulp.task('merge-minify-css-libraries-to-dist', false, [], function () {
             // Merge and minify the library css files in a single one to the dist folder.
             return new CssLibraryFileAggregationTaskBuilder()
                 .withMinification()
-                .withExtension('.min.css')
                 .build();
         }, {aliases: ['css-dep-min']});
         gulp.task('merge-libraries-to-dist', false, ['merge-js-libraries-to-dist', 'merge-css-libraries-to-dist'], null, {aliases: ['dep']});
@@ -274,18 +258,18 @@
                 return this;
             };
 
-            self.withExtension = function (extension) {
-                self.fileExtension = extension;
-                return this;
-            };
-
             self.build = function () {
                 var jsProcess = gulp.src(utils.bower.getJsLibraries({devDependencies: false, dependencies: true}));
                 if (self.shouldMinifyJs) {
-                    jsProcess = jsProcess.pipe(uglify());
+                    jsProcess = jsProcess
+                        .pipe(concat(parameters.libraryFileName + '.min.js'))
+                        .pipe(uglify());
+                }
+                else {
+                    jsProcess = jsProcess
+                        .pipe(concat(parameters.libraryFileName + '.js'));
                 }
                 return jsProcess
-                    .pipe(concat(parameters.libraryFileName + self.fileExtension))
                     .pipe(gulp.dest(parameters.distFolderPath));
             };
         }
@@ -298,18 +282,18 @@
                 return this;
             };
 
-            self.withExtension = function (extension) {
-                self.fileExtension = extension;
-                return this;
-            };
-
             self.build = function () {
                 var cssProcess = gulp.src(utils.bower.getCssLibraries({devDependencies: false, dependencies: true}));
                 if (self.shouldMinifyJs) {
-                    cssProcess = cssProcess.pipe(cssmin());
+                    cssProcess = cssProcess
+                        .pipe(concat(parameters.libraryFileName + '.min.css'))
+                        .pipe(cssmin());
+                }
+                else {
+                    cssProcess = cssProcess
+                        .pipe(concat(parameters.libraryFileName + '.css'));
                 }
                 return cssProcess
-                    .pipe(concat(parameters.libraryFileName + self.fileExtension))
                     .pipe(gulp.dest(parameters.distFolderPath));
             };
         }
