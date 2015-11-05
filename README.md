@@ -73,11 +73,14 @@ The folder *./app/* contains all the source code of the angular application :
 The source code is structured with 1 concept by file. 
 Try to follow the [John papa's best practices](https://github.com/johnpapa/angular-styleguide).
 
-We also find unit test files with the *.spec.js* suffix at the same level of the implementation.
+By default, unit test files contains the *.spec.js* suffix and are located to the same level of the implementation. This
+leeds to better navigation between test to implement detail. Honestly, it really saves time.
 Example :
-    - directives
-        - mapTitle.directive.js
-        - mapTitle.directive.spec.js
+* directives
+    * mapTitle.directive.js
+    * mapTitle.directive.spec.js
+    
+If you don't like this, just update the *./gulp/gulp.parameters.js* file to choose how to find test files. 
         
 **Important** : The **./karma.conf.js** file is used by gulp tasks to start test sessions. However, some properties 
 are automatically set by those tasks. Changes are ignored for the following properties :
@@ -97,22 +100,22 @@ The folder *./dist/* contains the built application files :
 Those files are generated with gulp tasks from source code of the *./app/* folder.
 
 ##All gulp tasks
-You can list availabe gulp tasks with :
+You can list available gulp tasks with :
 
     gulp help
 
 **Gulp tasks for building application**
-  build        Build the entire application in the dist folder.
-  build-min    Build the entire minified application in the dist folder.
-  build-min-w  Build the entire minified application in the dist folder and watch changes.
-  build-w      Build the entire application in the dist folder and watch changes.
-  clean        Clean the dist folder.
+* **build**        : Build the entire application in the dist folder.
+* **build-min**    : Build the entire minified application in the dist folder.
+* **build-min-w**  : Build the entire minified application in the dist folder and watch changes.
+* **build-w**      : Build the entire application in the dist folder and watch changes.
+* **clean**        : Clean the dist folder.
 
 **Gulp tasks for testing :**
-  test         Start a single run of all unit tests.
-  test-debug   Start a debug session of all unit tests.
-  test-dist    Start a single run of all unit tests, based on the full minified built application in the dist folder.
-  test-w       Start a continuous run of all unit tests.
+* **test**         : Start a single run of all unit tests.
+* **test-debug**   : Start a debug session of all unit tests.
+* **test-dist**    : Start a single run of all unit tests, based on the full minified built application in the dist folder.
+* **test-w**       : Start a continuous run of all unit tests.
 
 ##Gulp task configuration
 All the gulp tasks are configured with the *./gulp/gulp.parameters.js*. You can update the configuration to your needs :
@@ -120,12 +123,12 @@ where files are located, output file names, ...
 
 ##Plugins used by gulp
 The most important gulp plugins used are :
-* wiredep       : browse bower dependencies
-* gulp-inject   : inject files on tag in index.html
-* gulp-eslint   : check syntax of application javascript files
-* gulp-uglify   : minify javascript files
-* gulp-cssmin   : minify css files
-* gulp-rev      : update distributed file names with revision (checksum)
+* **wiredep**       : browse bower dependencies
+* **gulp-inject**   : inject files on tag in index.html
+* **gulp-eslint**   : check syntax of application javascript files
+* **gulp-uglify**   : minify javascript files
+* **gulp-cssmin**   : minify css files
+* **gulp-rev**      : update distributed file names with revision (checksum)
 
 ##What's next ?
 Save time with less plumbing.
