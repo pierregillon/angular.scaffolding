@@ -73,7 +73,13 @@ The folder *./app/* contains all the source code of the angular application :
 The source code is structured with 1 concept by file. 
 Try to follow the [John papa's best practices](https://github.com/johnpapa/angular-styleguide).
 
-By default, unit test files contains the *.spec.js* suffix and are located to the same level of the implementation. This
+###Unit testing
+By default, this scaffolding use Karma with the pluggins :
+* **Jasmine**   : test description library (describe, it)
+* **Chai**      : assertion library : expect(variable).to.be.an('object')
+* **Sinon**     : helps you to create spy and stubs : method = sinon.stub().returns(23)
+
+Unit test files end with the *.spec.js* suffix and are located to the same level of the implementation. This
 leeds to better navigation between test to implement detail. Honestly, it really saves time.
 Example :
 * directives
@@ -90,12 +96,12 @@ are automatically set by those tasks. Changes are ignored for the following prop
 
 ###Distrib
 The folder *./dist/* contains the built application files : 
-* application.js    : aggregation of all the javascript files of the application
-* application.css   : aggregation of all the css files of the application
-* templates.js      : aggregation of all the html files into the angular template cache
-* libraries.js      : aggregation of all bower dependency javascript files
-* libraries.cs      : aggregation of all bower dependency css files
-* index.html        : the index page that contains references to other files
+* **application.js**    : aggregation of all the javascript files of the application
+* **application.css**   : aggregation of all the css files of the application
+* **templates.js**      : aggregation of all the html files into the angular template cache
+* **libraries.js**      : aggregation of all bower dependency javascript files
+* **libraries.cs**      : aggregation of all bower dependency css files
+* **index.html**        : the index page that contains references to other files
 
 Those files are generated with gulp tasks from source code of the *./app/* folder.
 
