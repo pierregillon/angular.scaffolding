@@ -11,6 +11,7 @@
             debug = require('gulp-debug'),
             eslint = require('gulp-eslint'),
             rename = require('gulp-rename'),
+            rev = require('gulp-rev'),
             runSequence = require('run-sequence'),
             del = require('del'),
             path = require('path'),
@@ -51,14 +52,14 @@
                 'merge-minify-template-files-to-dist',
                 'merge-minify-css-files-to-dist',
                 'merge-minify-libraries-to-dist',
-                'reference-minified-dist-files-to-index',
+                'reference-dist-files-to-index',
                 callback);
         });
         gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
             gulp.watch([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
             gulp.watch([parameters.viewFiles], ['merge-minify-template-files-to-dist']);
             gulp.watch([parameters.cssFiles], ['merge-minify-css-files-to-dist']);
-            gulp.watch([parameters.indexLocation], ['reference-minified-dist-files-to-index']);
+            gulp.watch([parameters.indexLocation], ['reference-dist-files-to-index']);
         });
 
         /**
@@ -117,7 +118,8 @@
                 if (self.shouldMinifyJs) {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.min.js'))
-                        .pipe(uglify());
+                        .pipe(uglify())
+                        .pipe(rev());
                 }
                 else {
                     process = process
@@ -167,7 +169,8 @@
                 if (self.shouldMinifyCode) {
                     process = process
                         .pipe(uglify())
-                        .pipe(rename(parameters.templateFileName + '.min.js'));
+                        .pipe(rename(parameters.templateFileName + '.min.js'))
+                        .pipe(rev());
                 }
                 else {
                     process = process
@@ -175,7 +178,8 @@
                         .pipe(rename(parameters.templateFileName + '.js'));
                 }
 
-                return process.pipe(gulp.dest(parameters.distFolderPath));
+                return process
+                    .pipe(gulp.dest(parameters.distFolderPath));
             }
         }
 
@@ -212,7 +216,8 @@
                 if (self.shouldMinifyJs) {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.min.css'))
-                        .pipe(cssmin());
+                        .pipe(cssmin())
+                        .pipe(rev());
                 }
                 else {
                     process = process
@@ -263,7 +268,8 @@
                 if (self.shouldMinifyJs) {
                     jsProcess = jsProcess
                         .pipe(concat(parameters.libraryFileName + '.min.js'))
-                        .pipe(uglify());
+                        .pipe(uglify())
+                        .pipe(rev());
                 }
                 else {
                     jsProcess = jsProcess
@@ -287,7 +293,8 @@
                 if (self.shouldMinifyJs) {
                     cssProcess = cssProcess
                         .pipe(concat(parameters.libraryFileName + '.min.css'))
-                        .pipe(cssmin());
+                        .pipe(cssmin())
+                        .pipe(rev());
                 }
                 else {
                     cssProcess = cssProcess
@@ -306,35 +313,17 @@
             // Copy the root html file to the dist folder and inject built dependencies.
             return new ReferenceAggregatedFilesTaskBuilder().build();
         }, {aliases: ['ref']});
-        gulp.task('reference-minified-dist-files-to-index', false, [], function () {
-            // Copy the root html file to the dist folder and inject minified built dependencies.
-            return new ReferenceAggregatedFilesTaskBuilder()
-                .withMinifiedFiles()
-                .build();
-        }, {aliases: ['ref-min']});
 
         function ReferenceAggregatedFilesTaskBuilder() {
             var self = this;
 
-            self.withMinifiedFiles = function () {
-                self.useMinifiedFiles = true;
-                return this;
-            };
-
             self.build = function () {
-                var jsExtension = '.js';
-                var cssExtension = '.css';
-                if (self.useMinifiedFiles) {
-                    jsExtension = '.min.js';
-                    cssExtension = '.min.css';
-                }
-
                 var files = [
-                    path.join(parameters.distFolderPath, parameters.libraryFileName + jsExtension),
-                    path.join(parameters.distFolderPath, parameters.templateFileName + jsExtension),
-                    path.join(parameters.distFolderPath, parameters.applicationFileName + jsExtension),
-                    path.join(parameters.distFolderPath, parameters.libraryFileName + cssExtension),
-                    path.join(parameters.distFolderPath, parameters.applicationFileName + cssExtension)
+                    path.join(parameters.distFolderPath, 'libraries*js'),
+                    path.join(parameters.distFolderPath, 'libraries*css'),
+                    path.join(parameters.distFolderPath, 'application*js'),
+                    path.join(parameters.distFolderPath, 'application*css'),
+                    path.join(parameters.distFolderPath, 'templates*js')
                 ];
                 var filesToReference = gulp.src(files, {read: false});
                 return gulp
