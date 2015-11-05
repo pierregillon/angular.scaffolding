@@ -167,11 +167,11 @@
                     .src(parameters.viewFiles)
                     .pipe(minifyHtml({}))
                     .pipe(ngHtml2js({
-                        moduleName: 'templates',
+                        moduleName: parameters.templateModuleName,
                         template: '$templateCache.put(\'<%= template.url %>\',\'<%= template.escapedContent %>\');'
                     }))
                     .pipe(concat(parameters.templateFileName + self.fileExtension))
-                    .pipe(header(headerStr, {moduleName: 'templates'}))
+                    .pipe(header(headerStr, {moduleName: parameters.templateModuleName}))
                     .pipe(footer(footerStr));
 
                 if (self.shouldMinifyCode) {

@@ -14,7 +14,6 @@
         jsTestFiles: [
             './app/js/**/*.spec.js'
         ],
-        karmaFilePath:'./karma.conf.js',
 
         // css
         cssFiles: './app/css/**/*.css',
@@ -30,7 +29,11 @@
         distFolderPath: './dist',
         applicationFileName: 'application',
         templateFileName: 'templates',
-        libraryFileName: 'libraries'
+        libraryFileName: 'libraries',
+
+        // Others
+        karmaFilePath:'./karma.conf.js',
+        templateModuleName: 'templates'
     };
 
     module.exports = parameters;
