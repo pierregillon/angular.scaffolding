@@ -108,6 +108,11 @@
                 return self;
             };
 
+            self.withRevision = function(){
+                self.shouldReviseVersion = true;
+                return self;
+            };
+
             self.build = function () {
                 var jsFilesToBuild = []
                     .concat(parameters.jsFiles)
@@ -132,12 +137,15 @@
                 if (self.shouldMinifyJs) {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.min.js'))
-                        .pipe(uglify())
-                        .pipe(rev());
+                        .pipe(uglify());
                 }
                 else {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.js'));
+                }
+
+                if(self.shouldReviseVersion){
+                    process = process.pipe(rev());
                 }
 
                 return process.pipe(gulp.dest(parameters.distFolderPath));
@@ -165,6 +173,11 @@
                 return self;
             };
 
+            self.withRevision = function(){
+                self.shouldReviseVersion = true;
+                return self;
+            };
+
             self.build = function () {
                 var headerStr = '(function(angular){\'use strict\';angular.module(\'${moduleName}\', []).run(processTemplates);processTemplates.$inject = [\'$templateCache\'];function processTemplates($templateCache){';
                 var footerStr = '}})(window.angular);\r\n';
@@ -183,13 +196,16 @@
                 if (self.shouldMinifyCode) {
                     process = process
                         .pipe(uglify())
-                        .pipe(rename(parameters.templateFileName + '.min.js'))
-                        .pipe(rev());
+                        .pipe(rename(parameters.templateFileName + '.min.js'));
                 }
                 else {
                     process = process
                         .pipe(beautify())
                         .pipe(rename(parameters.templateFileName + '.js'));
+                }
+
+                if(self.shouldReviseVersion){
+                    process = process.pipe(rev());
                 }
 
                 return process
@@ -220,6 +236,11 @@
                 return this;
             };
 
+            self.withRevision = function(){
+                self.shouldReviseVersion = true;
+                return self;
+            };
+
             self.build = function () {
                 var cssFilesToAggregate = [
                     parameters.cssFiles,
@@ -230,12 +251,14 @@
                 if (self.shouldMinifyJs) {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.min.css'))
-                        .pipe(cssmin())
-                        .pipe(rev());
+                        .pipe(cssmin());
                 }
                 else {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.css'));
+                }
+                if(self.shouldReviseVersion){
+                    process = process.pipe(rev());
                 }
                 return process.pipe(gulp.dest(parameters.distFolderPath));
             };
@@ -277,17 +300,24 @@
                 return this;
             };
 
+            self.withRevision = function(){
+                self.shouldReviseVersion = true;
+                return self;
+            };
+
             self.build = function () {
                 var jsProcess = gulp.src(utils.bower.getJsLibraries({devDependencies: false, dependencies: true}));
                 if (self.shouldMinifyJs) {
                     jsProcess = jsProcess
                         .pipe(concat(parameters.libraryFileName + '.min.js'))
-                        .pipe(uglify())
-                        .pipe(rev());
+                        .pipe(uglify());
                 }
                 else {
                     jsProcess = jsProcess
                         .pipe(concat(parameters.libraryFileName + '.js'));
+                }
+                if(self.shouldReviseVersion){
+                    jsProcess = jsProcess.pipe(rev());
                 }
                 return jsProcess
                     .pipe(gulp.dest(parameters.distFolderPath));
@@ -302,17 +332,24 @@
                 return this;
             };
 
+            self.withRevision = function(){
+                self.shouldReviseVersion = true;
+                return self;
+            };
+
             self.build = function () {
                 var cssProcess = gulp.src(utils.bower.getCssLibraries({devDependencies: false, dependencies: true}));
                 if (self.shouldMinifyJs) {
                     cssProcess = cssProcess
                         .pipe(concat(parameters.libraryFileName + '.min.css'))
-                        .pipe(cssmin())
-                        .pipe(rev());
+                        .pipe(cssmin());
                 }
                 else {
                     cssProcess = cssProcess
                         .pipe(concat(parameters.libraryFileName + '.css'));
+                }
+                if(self.shouldReviseVersion){
+                    cssProcess = cssProcess.pipe(rev());
                 }
                 return cssProcess
                     .pipe(gulp.dest(parameters.distFolderPath));
