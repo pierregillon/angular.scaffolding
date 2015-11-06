@@ -17,7 +17,7 @@
   "htmlTemplateFiles": [
     "./app/js/**/*.html"
   ],
-  "indexLocation": "./app/index.html",
+  "startupFile": "./app/index.html",
   "distFolderPath": "./dist",
   "applicationFileName": "application",
   "templateFileName": "templates",

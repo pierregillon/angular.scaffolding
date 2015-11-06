@@ -44,7 +44,7 @@
             gulp.watch([parameters.jsFiles], ['merge-js-files-to-dist']);
             gulp.watch([parameters.htmlTemplateFiles], ['merge-template-files-to-dist']);
             gulp.watch([parameters.cssFiles], ['merge-css-files-to-dist']);
-            gulp.watch([parameters.indexLocation], ['reference-dist-files-to-index']);
+            gulp.watch([parameters.startupFile], ['reference-dist-files-to-index']);
         });
         gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
             runSequence(
@@ -60,7 +60,7 @@
             gulp.watch([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
             gulp.watch([parameters.htmlTemplateFiles], ['merge-minify-template-files-to-dist']);
             gulp.watch([parameters.cssFiles], ['merge-minify-css-files-to-dist']);
-            gulp.watch([parameters.indexLocation], ['reference-dist-files-to-index']);
+            gulp.watch([parameters.startupFile], ['reference-dist-files-to-index']);
         });
 
         /**
@@ -373,7 +373,7 @@
                 ];
                 var filesToReference = gulp.src(files, {read: false});
                 return gulp
-                    .src(parameters.indexLocation)
+                    .src(parameters.startupFile)
                     .pipe(gulp.dest(parameters.distFolderPath))
                     .pipe(inject(filesToReference, {addRootSlash: false, relative: true}))
                     .pipe(gulp.dest(parameters.distFolderPath));
