@@ -242,12 +242,7 @@
             };
 
             self.build = function () {
-                var cssFilesToAggregate = [
-                    parameters.cssFiles,
-                    '!' + parameters.minCssFiles
-                ];
-
-                var process = gulp.src(cssFilesToAggregate);
+                var process = gulp.src(parameters.cssFiles);
                 if (self.shouldMinifyJs) {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.min.css'))

@@ -1,8 +1,8 @@
 ﻿(function(require){
     'use strict';
 
-    var parameters = require('./gulp/gulp.parameters.js');
-    require('./gulp/gulp.build.js')(parameters);
-    require('./gulp/gulp.test.js')(parameters);
+    var configuration = require('./gulp/gulp.configuration.json');
+    require('./gulp/gulp.build.js')(configuration);
+    require('./gulp/gulp.test.js')(configuration);
 
 }(require));
