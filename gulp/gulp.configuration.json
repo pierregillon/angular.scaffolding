@@ -14,7 +14,7 @@
     "./app/css/**/*.css",
     "!./app/css/**/*.min.css"
   ],
-  "viewFiles": [
+  "htmlTemplateFiles": [
     "./app/js/**/*.html"
   ],
   "indexLocation": "./app/index.html",

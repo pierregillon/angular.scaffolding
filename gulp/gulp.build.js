@@ -42,7 +42,7 @@
         });
         gulp.task('build-w', 'Build the entire application in the dist folder and watch changes.', ['build'], function () {
             gulp.watch([parameters.jsFiles], ['merge-js-files-to-dist']);
-            gulp.watch([parameters.viewFiles], ['merge-template-files-to-dist']);
+            gulp.watch([parameters.htmlTemplateFiles], ['merge-template-files-to-dist']);
             gulp.watch([parameters.cssFiles], ['merge-css-files-to-dist']);
             gulp.watch([parameters.indexLocation], ['reference-dist-files-to-index']);
         });
@@ -58,7 +58,7 @@
         });
         gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
             gulp.watch([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
-            gulp.watch([parameters.viewFiles], ['merge-minify-template-files-to-dist']);
+            gulp.watch([parameters.htmlTemplateFiles], ['merge-minify-template-files-to-dist']);
             gulp.watch([parameters.cssFiles], ['merge-minify-css-files-to-dist']);
             gulp.watch([parameters.indexLocation], ['reference-dist-files-to-index']);
         });
@@ -183,7 +183,7 @@
                 var footerStr = '}})(window.angular);\r\n';
 
                 var process = gulp
-                    .src(parameters.viewFiles)
+                    .src(parameters.htmlTemplateFiles)
                     .pipe(minifyHtml({}))
                     .pipe(ngHtml2js({
                         moduleName: parameters.templateModuleName,
