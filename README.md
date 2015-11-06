@@ -129,12 +129,13 @@ where files are located, output file names, ...
 
 ##Plugins used by gulp
 The most important gulp plugins used are :
-* **wiredep**       : browse bower dependencies
-* **gulp-inject**   : inject files on tag in index.html
-* **gulp-eslint**   : check syntax of application javascript files
-* **gulp-uglify**   : minify javascript files
-* **gulp-cssmin**   : minify css files
-* **gulp-rev**      : update distributed file names with revision (checksum)
+* **wiredep**           : browse bower dependencies
+* **gulp-inject**       : inject files on tag in index.html
+* **gulp-eslint**       : check syntax of application javascript files
+* **gulp-uglify**       : minify javascript files
+* **gulp-cssmin**       : minify css files
+* **gulp-rev**          : update distributed file names with revision (checksum)
+* **gulp-ng-annotate**  : automatically inject dependency names in functions for safe minification
 
 ##What's next ?
 Save time with less plumbing.

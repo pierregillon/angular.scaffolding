@@ -5,6 +5,7 @@
         .module('map')
         .directive('mapTitle', directive);
 
+    /* @ngInject */
     function directive() {
         return {
             templateUrl: 'map/directives/mapTitle.directive.html',

@@ -16,6 +16,7 @@
             del = require('del'),
             path = require('path'),
             utils = require('./gulp.utils'),
+            ngAnnotate = require('gulp-ng-annotate'),
 
         // for templates merge
             header = require('gulp-header'),
@@ -77,12 +78,14 @@
             // Merge javascript application files in a single one to the dist folder.
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
+                .withAutomaticDependencyNamesInjection()
                 .build();
         }, {aliases: ['js']});
         gulp.task('merge-minify-js-files-to-dist', false, [], function () {
             // Merge and minify javascript application files in a single one to the dist folder.
             return new JavascriptFileAggregationTaskBuilder()
                 .withSyntaxValidation()
+                .withAutomaticDependencyNamesInjection()
                 .withMinification()
                 .build();
         }, {aliases: ['js-min']});
@@ -100,13 +103,24 @@
                 return self;
             };
 
+            self.withAutomaticDependencyNamesInjection = function(){
+                self.shouldInjectDependencyNamesInAngularFunction = true;
+                return self;
+            };
+
             self.build = function () {
                 var jsFilesToBuild = []
                     .concat(parameters.jsFiles)
                     .concat(concatForeach('!', parameters.jsTestFiles));
 
-                var process = gulp
-                    .src(jsFilesToBuild);
+                var process = gulp.src(jsFilesToBuild);
+
+                if (self.shouldInjectDependencyNamesInAngularFunction) {
+                    process = process.pipe(ngAnnotate({
+                        add: true,
+                        single_quotes: true
+                    }));
+                }
 
                 if (self.shouldValidateSyntax) {
                     process = process

@@ -5,8 +5,7 @@
         .module('map')
         .service('displayRepository', service);
 
-    service.$inject = ['$q'];
-
+    /* @ngInject */
     function service($q) {
         var self = this;
 

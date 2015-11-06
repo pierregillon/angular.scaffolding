@@ -5,8 +5,7 @@
         .module('map')
         .service('markerService', service);
 
-    service.$inject = ['displayRepository'];
-
+    /* @ngInject */
     function service(displayRepository) {
         var self = this;
 

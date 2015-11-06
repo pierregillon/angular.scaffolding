@@ -5,8 +5,7 @@
         .module('main')
         .config(configuration);
 
-    configuration.$inject = ['$stateProvider', '$urlRouterProvider'];
-
+    /* @ngInject */
     function configuration($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
