@@ -102,6 +102,7 @@ The folder *./dist/* contains the built application files :
 * **libraries.js**      : aggregation of all bower dependency javascript files
 * **libraries.cs**      : aggregation of all bower dependency css files
 * **index.html**        : the index page that contains references to other files
+* **img/**              : the folder that contains all the images of the application
 
 Those files are generated with gulp tasks from source code of the *./app/* folder.
 Currently, the files that are used to generate the distribution files are :

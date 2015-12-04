@@ -23,6 +23,9 @@
   "htmlTemplateFiles": [
     "./app/js/**/*.html"
   ],
+  "imgFiles":[
+    "./app/img/*"
+  ],
   "startupFile": "./app/index.html",
   "distFolderPath": "./dist",
   "applicationFileName": "application",

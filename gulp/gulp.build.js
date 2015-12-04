@@ -41,6 +41,7 @@
                 'merge-css-files-to-dist',
                 'merge-libraries-to-dist',
                 'reference-dist-files-to-index',
+                'copy-images-to-dist',
                 callback);
         });
         gulp.task('build-w', 'Build the entire application in the dist folder and watch changes.', ['build'], function () {
@@ -54,6 +55,8 @@
             watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-template-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.cssFiles, parameters.lessFiles], ['merge-css-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
+            watchAndRefreshWithBrowserSync([parameters.imgFiles], ['copy-images-to-dist']);
+
         });
         gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
             runSequence(
@@ -63,6 +66,7 @@
                 'merge-minify-css-files-to-dist',
                 'merge-minify-libraries-to-dist',
                 'reference-dist-files-to-index',
+                'copy-images-to-dist',
                 callback);
         });
         gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
@@ -76,6 +80,7 @@
             watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-minify-template-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.cssFiles, parameters.lessFiles], ['merge-minify-css-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
+            watchAndRefreshWithBrowserSync([parameters.imgFiles], ['copy-images-to-dist']);
         });
 
         var prefix = 'bs-';
@@ -423,6 +428,14 @@
                     .pipe(gulp.dest(parameters.distFolderPath));
             };
         }
+
+        /**
+         * @description Copy images : Copy all images in the dist folder.
+         */
+        gulp.task('copy-images-to-dist', false, [], function () {
+            return gulp.src(parameters.imgFiles)
+                .pipe(gulp.dest(path.join(parameters.distFolderPath, 'img')));
+        }, {aliases: ['img']});
 
         // ----- Utils
         function concatForeach(character, array) {
