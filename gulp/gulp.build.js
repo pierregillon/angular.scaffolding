@@ -5,6 +5,7 @@
 
         var gulp = require('gulp-help')(require('gulp')),
             concat = require('gulp-concat'),
+            less = require('gulp-less'),
             cssmin = require('gulp-cssmin'),
             uglify = require('gulp-uglify'),
             inject = require("gulp-inject"),
@@ -18,6 +19,7 @@
             utils = require('./gulp.utils'),
             ngAnnotate = require('gulp-ng-annotate'),
             browserSync = require('browser-sync').create(),
+            addStream = require('add-stream'),
 
         // for templates merge
             header = require('gulp-header'),
@@ -50,7 +52,7 @@
 
             watchAndRefreshWithBrowserSync([parameters.jsFiles], ['merge-js-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-template-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.cssFiles], ['merge-css-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.cssFiles, parameters.lessFiles], ['merge-css-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
         });
         gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
@@ -72,7 +74,7 @@
 
             watchAndRefreshWithBrowserSync([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-minify-template-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.cssFiles], ['merge-minify-css-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.cssFiles, parameters.lessFiles], ['merge-minify-css-files-to-dist']);
             watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
         });
 
@@ -278,7 +280,13 @@
             };
 
             self.build = function () {
-                var process = gulp.src(parameters.cssFiles);
+                var process = gulp
+                    .src(parameters.cssFiles)
+                    .pipe(addStream.obj(
+                        gulp.src(parameters.lessFiles)
+                            .pipe(less()))
+                    );
+
                 if (self.shouldMinifyJs) {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.min.css'))

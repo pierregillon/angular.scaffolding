@@ -74,7 +74,7 @@ The source code is structured with 1 concept by file.
 Try to follow the [John papa's best practices](https://github.com/johnpapa/angular-styleguide).
 
 ###Unit testing
-By default, this scaffolding use Karma with the pluggins :
+By default, this scaffolding use Karma with the plugins :
 * **Jasmine**   : test description library (describe, it)
 * **Chai**      : assertion library : expect(variable).to.be.an('object')
 * **Sinon**     : helps you to create spy and stubs : method = sinon.stub().returns(23)
@@ -97,13 +97,19 @@ are automatically set by those tasks. Changes are ignored for the following prop
 ###Distrib
 The folder *./dist/* contains the built application files : 
 * **application.js**    : aggregation of all the javascript files of the application
-* **application.css**   : aggregation of all the css files of the application
+* **application.css**   : aggregation of all the css files and transformed less files of the application
 * **templates.js**      : aggregation of all the html files into the angular template cache
 * **libraries.js**      : aggregation of all bower dependency javascript files
 * **libraries.cs**      : aggregation of all bower dependency css files
 * **index.html**        : the index page that contains references to other files
 
 Those files are generated with gulp tasks from source code of the *./app/* folder.
+Currently, the files that are used to generate the distribution files are :
+* .js
+* .css
+* .less
+* .html
+* all image files in the **app/img/** folder
 
 ##All gulp tasks
 You can list available gulp tasks with :
@@ -131,15 +137,14 @@ where files are located, output file names, ...
 ##Plugins used by gulp
 The most important gulp plugins used are :
 * **wiredep**           : browse bower dependencies
+* **browser-sync**      : refresh the browser when javascript or html code are modified
 * **gulp-inject**       : inject files on tag in index.html
 * **gulp-eslint**       : check syntax of application javascript files
 * **gulp-uglify**       : minify javascript files
 * **gulp-cssmin**       : minify css files
+* **gulp-less**         : transform less files to css files
 * **gulp-rev**          : update distributed file names with revision (checksum)
 * **gulp-ng-annotate**  : automatically inject dependency names in functions for safe minification
-* **browser-sync**      : refresh the browser when javascript or html code are modified
 
 ##What's next ?
 Save time with less plumbing.
-
-

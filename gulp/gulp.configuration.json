@@ -17,6 +17,9 @@
     "./app/css/**/*.css",
     "!./app/css/**/*.min.css"
   ],
+  "lessFiles":[
+    "./app/css/**/*.less"
+  ],
   "htmlTemplateFiles": [
     "./app/js/**/*.html"
   ],
