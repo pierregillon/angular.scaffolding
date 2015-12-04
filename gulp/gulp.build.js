@@ -17,6 +17,7 @@
             path = require('path'),
             utils = require('./gulp.utils'),
             ngAnnotate = require('gulp-ng-annotate'),
+            browserSync = require('browser-sync').create(),
 
         // for templates merge
             header = require('gulp-header'),
@@ -41,10 +42,16 @@
                 callback);
         });
         gulp.task('build-w', 'Build the entire application in the dist folder and watch changes.', ['build'], function () {
-            gulp.watch([parameters.jsFiles], ['merge-js-files-to-dist']);
-            gulp.watch([parameters.htmlTemplateFiles], ['merge-template-files-to-dist']);
-            gulp.watch([parameters.cssFiles], ['merge-css-files-to-dist']);
-            gulp.watch([parameters.startupFile], ['reference-dist-files-to-index']);
+            browserSync.init({
+                server: {
+                    baseDir: parameters.distFolderPath
+                }
+            });
+
+            watchAndRefreshWithBrowserSync([parameters.jsFiles], ['merge-js-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-template-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.cssFiles], ['merge-css-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
         });
         gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
             runSequence(
@@ -57,11 +64,40 @@
                 callback);
         });
         gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
-            gulp.watch([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
-            gulp.watch([parameters.htmlTemplateFiles], ['merge-minify-template-files-to-dist']);
-            gulp.watch([parameters.cssFiles], ['merge-minify-css-files-to-dist']);
-            gulp.watch([parameters.startupFile], ['reference-dist-files-to-index']);
+            browserSync.init({
+                server: {
+                    baseDir: parameters.distFolderPath
+                }
+            });
+
+            watchAndRefreshWithBrowserSync([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-minify-template-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.cssFiles], ['merge-minify-css-files-to-dist']);
+            watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
         });
+
+        var prefix = 'bs-';
+        var taskNameToBrowserSyncTaskName = {};
+
+        function watchAndRefreshWithBrowserSync(filePatterns, taskNames) {
+            var browserSyncTaskNames = [];
+            taskNames.forEach(function (taskName) {
+                if (taskNameToBrowserSyncTaskName[taskName] === undefined) {
+                    taskNameToBrowserSyncTaskName[taskName] = buildBrowserSyncTaskDecorator(taskName);
+                }
+                browserSyncTaskNames.push(taskNameToBrowserSyncTaskName[taskName]);
+            });
+            gulp.watch(filePatterns, browserSyncTaskNames);
+        }
+
+        function buildBrowserSyncTaskDecorator(taskName) {
+            var browserSyncTaskName = prefix + taskName;
+            gulp.task(browserSyncTaskName, false, [taskName], function (callback) {
+                browserSync.reload();
+                callback();
+            });
+            return browserSyncTaskName;
+        }
 
         /**
          * @description Clean task : Remove all files of the dist folder.
@@ -103,12 +139,12 @@
                 return self;
             };
 
-            self.withAutomaticDependencyNamesInjection = function(){
+            self.withAutomaticDependencyNamesInjection = function () {
                 self.shouldInjectDependencyNamesInAngularFunction = true;
                 return self;
             };
 
-            self.withRevision = function(){
+            self.withRevision = function () {
                 self.shouldReviseVersion = true;
                 return self;
             };
@@ -144,7 +180,7 @@
                         .pipe(concat(parameters.applicationFileName + '.js'));
                 }
 
-                if(self.shouldReviseVersion){
+                if (self.shouldReviseVersion) {
                     process = process.pipe(rev());
                 }
 
@@ -173,7 +209,7 @@
                 return self;
             };
 
-            self.withRevision = function(){
+            self.withRevision = function () {
                 self.shouldReviseVersion = true;
                 return self;
             };
@@ -204,7 +240,7 @@
                         .pipe(rename(parameters.templateFileName + '.js'));
                 }
 
-                if(self.shouldReviseVersion){
+                if (self.shouldReviseVersion) {
                     process = process.pipe(rev());
                 }
 
@@ -236,7 +272,7 @@
                 return this;
             };
 
-            self.withRevision = function(){
+            self.withRevision = function () {
                 self.shouldReviseVersion = true;
                 return self;
             };
@@ -252,7 +288,7 @@
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.css'));
                 }
-                if(self.shouldReviseVersion){
+                if (self.shouldReviseVersion) {
                     process = process.pipe(rev());
                 }
                 return process.pipe(gulp.dest(parameters.distFolderPath));
@@ -295,7 +331,7 @@
                 return this;
             };
 
-            self.withRevision = function(){
+            self.withRevision = function () {
                 self.shouldReviseVersion = true;
                 return self;
             };
@@ -311,7 +347,7 @@
                     jsProcess = jsProcess
                         .pipe(concat(parameters.libraryFileName + '.js'));
                 }
-                if(self.shouldReviseVersion){
+                if (self.shouldReviseVersion) {
                     jsProcess = jsProcess.pipe(rev());
                 }
                 return jsProcess
@@ -327,7 +363,7 @@
                 return this;
             };
 
-            self.withRevision = function(){
+            self.withRevision = function () {
                 self.shouldReviseVersion = true;
                 return self;
             };
@@ -343,7 +379,7 @@
                     cssProcess = cssProcess
                         .pipe(concat(parameters.libraryFileName + '.css'));
                 }
-                if(self.shouldReviseVersion){
+                if (self.shouldReviseVersion) {
                     cssProcess = cssProcess.pipe(rev());
                 }
                 return cssProcess

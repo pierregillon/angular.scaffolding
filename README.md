@@ -113,8 +113,8 @@ You can list available gulp tasks with :
 **Gulp tasks for building application**
 * **build**        : Build the entire application in the dist folder.
 * **build-min**    : Build the entire minified application in the dist folder.
-* **build-min-w**  : Build the entire minified application in the dist folder and watch changes.
-* **build-w**      : Build the entire application in the dist folder and watch changes.
+* **build-min-w**  : Build the entire minified application in the dist folder and watch changes. Browser-sync is used to refresh the browser.
+* **build-w**      : Build the entire application in the dist folder and watch changes. Browser-sync is used to refresh the browser.
 * **clean**        : Clean the dist folder.
 
 **Gulp tasks for testing :**
@@ -137,6 +137,7 @@ The most important gulp plugins used are :
 * **gulp-cssmin**       : minify css files
 * **gulp-rev**          : update distributed file names with revision (checksum)
 * **gulp-ng-annotate**  : automatically inject dependency names in functions for safe minification
+* **browser-sync**      : refresh the browser when javascript or html code are modified
 
 ##What's next ?
 Save time with less plumbing.
