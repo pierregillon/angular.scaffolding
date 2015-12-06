@@ -1,4 +1,4 @@
-﻿(function(module, require) {
+﻿(function (module, require) {
     module.exports = buildDefinition;
 
     function buildDefinition(parameters) {
@@ -12,23 +12,35 @@
         /**
          * @description Test tasks : Launch unit tests in karma with different modes.
          */
-        gulp.task('test', 'Start a single run of all unit tests.', ['merge-template-files-to-dist'], function() {
-            return runKarmaOnSourceCode({
+        gulp.task('test', 'Start a single run of all unit tests.', ['merge-template-files-to-dist'], function () {
+            return runKarmaOnCode({
                 action: 'run'
             });
         });
-        gulp.task('test-w', 'Start a continuous run of all unit tests.', ['merge-template-files-to-dist'], function() {
-            return runKarmaOnSourceCode({
+        gulp.task('test-w', 'Start a continuous run of all unit tests.', ['merge-template-files-to-dist'], function () {
+            return runKarmaOnCode({
                 action: 'watch'
             });
         });
-        gulp.task('test-debug', 'Start a debug session of all unit tests.', ['merge-template-files-to-dist'], function() {
-            return runKarmaOnSourceCode({
+        gulp.task('test-c', 'Start a single run of all unit tests and build a coverage summary.', ['merge-template-files-to-dist'], function () {
+            return runKarmaOnCode({
+                preprocessors: {
+                    'app/js/**/*.js': 'coverage'
+                },
+                action: 'run',
+                reporters: ['coverage'],
+                coverageReporter: {
+                    type: 'text-summary'
+                }
+            });
+        });
+        gulp.task('test-debug', 'Start a debug session of all unit tests.', ['merge-template-files-to-dist'], function () {
+            return runKarmaOnCode({
                 action: 'watch',
                 browsers: ['Chrome']
             });
         });
-        gulp.task('test-dist', 'Start a single run of all unit tests, based on the full minified built application in the dist folder.', [], function(callback) {
+        gulp.task('test-dist', 'Start a single run of all unit tests, based on the full minified built application in the dist folder.', [], function (callback) {
             runSequence('build-min', 'test-current-dist', callback);
         });
 
@@ -40,25 +52,21 @@
         });
 
         // ----- Utils
-        function runKarmaOnSourceCode(configuration) {
-            var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
-                .concat(parameters.jsFiles)
-                .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '.js'))
-                .concat(parameters.jsTestFiles);
-            return runKarmaOnCode(files, configuration);
-        }
         function runKarmaOnDistCode(configuration) {
             var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
                 .concat(parameters.jsTestFiles)
                 .concat(path.join(parameters.distFolderPath, parameters.applicationFileName + '*js'))
                 .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '*js'));
-            return runKarmaOnCode(files, configuration);
+            return runKarmaOnCode(configuration, files);
         }
-        function runKarmaOnCode(files, configuration) {
+
+        function runKarmaOnCode(configuration, files) {
             configuration.configFile = path.resolve(parameters.karmaFilePath);
             configuration.singleRun = configuration.action === 'run';
-            configuration.files = files;
-            configuration.exclude = [];
+
+            if (files) {
+                configuration.files = files;
+            }
 
             var server = new karma.Server(configuration);
             server.start();

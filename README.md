@@ -122,6 +122,7 @@ You can list available gulp tasks with :
 * **test-debug**   : Start a debug session of all unit tests.
 * **test-dist**    : Start a single run of all unit tests, based on the full minified built application in the dist folder.
 * **test-w**       : Start a continuous run of all unit tests.
+* **test-c**       : Start a single run of all unit tests and build a coverage summary.
 
 ##Gulp task configuration
 All the gulp tasks are configured with the *./gulp/gulp.configuration.json*. You can update the configuration to your needs :
