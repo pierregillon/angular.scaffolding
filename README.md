@@ -73,6 +73,9 @@ The folder *./app/* contains all the source code of the angular application :
 The source code is structured with 1 concept by file. 
 Try to follow the [John papa's best practices](https://github.com/johnpapa/angular-styleguide).
 
+###Angular application
+The Angular application is initialized with the **ui-router** plugin.
+
 ###Unit testing
 By default, this scaffolding use Karma with the plugins :
 * **Jasmine**   : test description library (describe, it)
