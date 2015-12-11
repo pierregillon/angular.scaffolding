@@ -89,7 +89,7 @@ Example :
     * mapTitle.directive.js
     * mapTitle.directive.spec.js
     
-If you don't like this, just update the *./gulp/gulp.configuration.json* file to choose how to find test files. 
+If you don't like this, just update the *./path.configuration.json* file to choose how to find test files. 
         
 **Important** : The **./karma.conf.js** file is used by gulp tasks to start test sessions. However, some properties 
 are automatically set by those tasks. Changes are ignored for the following properties :
@@ -135,7 +135,7 @@ You can list available gulp tasks with :
 * **test-c**       : Start a single run of all unit tests and build a coverage summary.
 
 ##Gulp task configuration
-All the gulp tasks are configured with the *./gulp/gulp.configuration.json*. You can update the configuration to your needs :
+All the gulp tasks are configured with the *./path.configuration.json*. You can update the configuration to your needs :
 where files are located, output file names, ...
 
 ##Plugins used by gulp
