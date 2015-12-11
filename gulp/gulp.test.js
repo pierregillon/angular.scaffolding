@@ -7,7 +7,7 @@
             karma = require('karma'),
             runSequence = require('run-sequence'),
             path = require('path'),
-            utils = require('./gulp.utils');
+            utils = require('./gulp.utils')(parameters);
 
         /**
          * @description Test tasks : Launch unit tests in karma with different modes.

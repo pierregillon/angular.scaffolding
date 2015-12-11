@@ -32,5 +32,7 @@
   "templateFileName": "templates",
   "libraryFileName": "libraries",
   "karmaFilePath": "./karma.conf.js",
-  "templateModuleName": "templates"
+  "templateModuleName": "templates",
+
+  "bowerJsonFolderPath": "./"
 }

@@ -16,7 +16,7 @@
             runSequence = require('run-sequence'),
             del = require('del'),
             path = require('path'),
-            utils = require('./gulp.utils'),
+            utils = require('./gulp.utils')(parameters),
             ngAnnotate = require('gulp-ng-annotate'),
             browserSync = require('browser-sync').create(),
             addStream = require('add-stream'),

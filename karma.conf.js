@@ -2,8 +2,8 @@
     'use strict';
 
     var path = require('path');
-    var utils = require('./gulp/gulp.utils');
     var parameters = require('./path.configuration.json');
+    var utils = require('./gulp/gulp.utils')(parameters);
 
     var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
         .concat(parameters.jsFiles)
