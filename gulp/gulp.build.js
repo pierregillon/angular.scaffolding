@@ -20,6 +20,7 @@
             ngAnnotate = require('gulp-ng-annotate'),
             browserSync = require('browser-sync').create(),
             addStream = require('add-stream'),
+            imagemin = require('gulp-imagemin'),
 
         // for templates merge
             header = require('gulp-header'),
@@ -443,6 +444,7 @@
          */
         gulp.task('copy-images-to-dist', false, [], function () {
             return gulp.src(parameters.imgFiles)
+                .pipe(imagemin({optimizationLevel: 5}))
                 .pipe(gulp.dest(path.join(parameters.distFolderPath, 'img')));
         }, {aliases: ['img']});
 
