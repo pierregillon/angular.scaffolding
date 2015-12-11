@@ -7,6 +7,7 @@
             concat = require('gulp-concat'),
             less = require('gulp-less'),
             minCss = require('gulp-minify-css'),
+            autoprefixer = require('gulp-autoprefixer'),
             uglify = require('gulp-uglify'),
             inject = require("gulp-inject"),
             debug = require('gulp-debug'),
@@ -294,7 +295,10 @@
                     .pipe(addStream.obj(
                         gulp.src(parameters.lessFiles)
                             .pipe(less()))
-                    );
+                    )
+                    .pipe(autoprefixer({
+                        browsers: ['last 2 versions']
+                    }));
 
                 if (self.shouldMinifyJs) {
                     process = process
