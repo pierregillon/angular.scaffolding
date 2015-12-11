@@ -6,7 +6,7 @@
         var gulp = require('gulp-help')(require('gulp')),
             concat = require('gulp-concat'),
             less = require('gulp-less'),
-            cssmin = require('gulp-cssmin'),
+            minCss = require('gulp-minify-css'),
             uglify = require('gulp-uglify'),
             inject = require("gulp-inject"),
             debug = require('gulp-debug'),
@@ -299,7 +299,7 @@
                 if (self.shouldMinifyJs) {
                     process = process
                         .pipe(concat(parameters.applicationFileName + '.min.css'))
-                        .pipe(cssmin());
+                        .pipe(minCss());
                 }
                 else {
                     process = process
@@ -396,7 +396,7 @@
                 if (self.shouldMinifyJs) {
                     cssProcess = cssProcess
                         .pipe(concat(parameters.libraryFileName + '.min.css'))
-                        .pipe(cssmin());
+                        .pipe(minCss());
                 }
                 else {
                     cssProcess = cssProcess
