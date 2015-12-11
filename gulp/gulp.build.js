@@ -36,12 +36,14 @@
         gulp.task('build', 'Build the entire application in the dist folder.', [], function (callback) {
             runSequence(
                 'clean',
-                'merge-js-files-to-dist',
-                'merge-template-files-to-dist',
-                'merge-css-files-to-dist',
-                'merge-libraries-to-dist',
+                [
+                    'merge-js-files-to-dist',
+                    'merge-template-files-to-dist',
+                    'merge-css-files-to-dist',
+                    'merge-libraries-to-dist',
+                    'copy-images-to-dist'
+                ],
                 'reference-dist-files-to-index',
-                'copy-images-to-dist',
                 callback);
         });
         gulp.task('build-w', 'Build the entire application in the dist folder and watch changes.', ['build'], function () {
@@ -61,12 +63,14 @@
         gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
             runSequence(
                 'clean',
-                'merge-minify-js-files-to-dist',
-                'merge-minify-template-files-to-dist',
-                'merge-minify-css-files-to-dist',
-                'merge-minify-libraries-to-dist',
+                [
+                    'merge-minify-js-files-to-dist',
+                    'merge-minify-template-files-to-dist',
+                    'merge-minify-css-files-to-dist',
+                    'merge-minify-libraries-to-dist',
+                    'copy-images-to-dist'
+                ],
                 'reference-dist-files-to-index',
-                'copy-images-to-dist',
                 callback);
         });
         gulp.task('build-min-w', 'Build the entire minified application in the dist folder and watch changes.', ['build-min'], function () {
