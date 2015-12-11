@@ -21,6 +21,10 @@
                 getCssLibraries: function (wiredepParams) {
                     var parameters = extend(defaultBowerConfiguration, wiredepParams);
                     return wiredep(parameters).css || [];
+                },
+                getLessLibraries: function(wiredepParams){
+                    var parameters = extend(defaultBowerConfiguration, wiredepParams);
+                    return wiredep(parameters).less || [];
                 }
             }
         };

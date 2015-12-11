@@ -385,7 +385,13 @@
             };
 
             self.build = function () {
-                var cssProcess = gulp.src(utils.bower.getCssLibraries({devDependencies: false, dependencies: true}));
+                var cssProcess = gulp
+                    .src(utils.bower.getCssLibraries({devDependencies: false, dependencies: true}))
+                    .pipe(addStream.obj(
+                        gulp.src(utils.bower.getLessLibraries({devDependencies: false, dependencies: true}))
+                            .pipe(less()))
+                    );
+
                 if (self.shouldMinifyJs) {
                     cssProcess = cssProcess
                         .pipe(concat(parameters.libraryFileName + '.min.css'))
