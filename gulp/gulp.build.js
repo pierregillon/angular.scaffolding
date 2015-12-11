@@ -24,7 +24,6 @@
         // for templates merge
             header = require('gulp-header'),
             footer = require('gulp-footer'),
-            concat = require('gulp-concat'),
             beautify = require('gulp-beautify'),
             ngHtml2js = require('gulp-ng-html2js'),
             minifyHtml = require('gulp-minify-html');
