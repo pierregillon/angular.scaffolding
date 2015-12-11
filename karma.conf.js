@@ -3,7 +3,7 @@
 
     var path = require('path');
     var utils = require('./gulp/gulp.utils');
-    var parameters = require('./gulp/gulp.configuration.json');
+    var parameters = require('./path.configuration.json');
 
     var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
         .concat(parameters.jsFiles)
