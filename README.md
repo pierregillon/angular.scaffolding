@@ -10,6 +10,27 @@ The tools used are :
 - Gulp for task building
 - Eslint for syntax checker
 
+##Plugins used
+The most important plugins used are :
+* **wiredep**           : browse bower dependencies
+* **browser-sync**      : refresh the browser when javascript or html code are modified
+* **gulp-watch**        : better than classical gulp.watch(), can watch added and deleted files.
+* **gulp-inject**       : inject files on tag in index.html
+* **gulp-eslint**       : check syntax of application javascript files
+* **gulp-uglify**       : minify javascript files
+* **gulp-minify-css**   : minify css files
+* **gulp-less**         : transform less files to css files
+* **gulp-autoprefixer** : add prefix for css depending on browser versions
+* **gulp-rev**          : update distributed file names with revision (checksum)
+* **gulp-ng-annotate**  : automatically inject dependency names in functions for safe minification
+...
+
+##Package managers
+**Npm** and **Bower** are both needed.
+
+Npm is used to download packages that are useful for the project environment plumbing : gulp tasks and karma plugins.
+Bower is used to download packages that are required for the web application : angular, lodash, ...
+
 ##How to start ?
 1 - Copy the full project
 
@@ -51,12 +72,6 @@ The tools used are :
 8 - When you want to try the final distributed version, build the minified application
 
     gulp build-min
-
-##Package managers
-**Npm** and **Bower** are both needed.
-
-Npm is used to download packages that are useful for the project environment plumbing : gulp tasks and karma plugins.
-Bower is used to download packages that are required for the web application : angular, lodash, ...
 
 ##Files organisation
 
@@ -137,18 +152,6 @@ You can list available gulp tasks with :
 ##Gulp task configuration
 All the gulp tasks are configured with the *./path.configuration.json*. You can update the configuration to your needs :
 where files are located, output file names, ...
-
-##Plugins used by gulp
-The most important gulp plugins used are :
-* **wiredep**           : browse bower dependencies
-* **browser-sync**      : refresh the browser when javascript or html code are modified
-* **gulp-inject**       : inject files on tag in index.html
-* **gulp-eslint**       : check syntax of application javascript files
-* **gulp-uglify**       : minify javascript files
-* **gulp-cssmin**       : minify css files
-* **gulp-less**         : transform less files to css files
-* **gulp-rev**          : update distributed file names with revision (checksum)
-* **gulp-ng-annotate**  : automatically inject dependency names in functions for safe minification
 
 ##What's next ?
 Save time with less plumbing.
