@@ -4,6 +4,7 @@
     function buildDefinition(parameters) {
 
         var gulp = require('gulp-help')(require('gulp')),
+            watch = require('gulp-watch'),
             concat = require('gulp-concat'),
             less = require('gulp-less'),
             minCss = require('gulp-minify-css'),
@@ -54,11 +55,11 @@
                 }
             });
 
-            watchAndRefreshWithBrowserSync([parameters.jsFiles], ['merge-js-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-template-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.cssFiles, parameters.lessFiles], ['merge-css-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
-            watchAndRefreshWithBrowserSync([parameters.imgFiles], ['copy-images-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.jsFiles, ['merge-js-files-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.htmlTemplateFiles, ['merge-template-files-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.cssFiles.concat(parameters.lessFiles), ['merge-css-files-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.startupFile, ['reference-dist-files-to-index']);
+            watchAndRefreshWithBrowserSync(parameters.imgFiles, ['copy-images-to-dist']);
 
         });
         gulp.task('build-min', 'Build the entire minified application in the dist folder.', [], function (callback) {
@@ -81,11 +82,11 @@
                 }
             });
 
-            watchAndRefreshWithBrowserSync([parameters.jsFiles], ['merge-minify-js-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.htmlTemplateFiles], ['merge-minify-template-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.cssFiles, parameters.lessFiles], ['merge-minify-css-files-to-dist']);
-            watchAndRefreshWithBrowserSync([parameters.startupFile], ['reference-dist-files-to-index']);
-            watchAndRefreshWithBrowserSync([parameters.imgFiles], ['copy-images-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.jsFiles, ['merge-minify-js-files-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.htmlTemplateFiles, ['merge-minify-template-files-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.cssFiles.concat(parameters.lessFiles), ['merge-minify-css-files-to-dist']);
+            watchAndRefreshWithBrowserSync(parameters.startupFile, ['reference-dist-files-to-index']);
+            watchAndRefreshWithBrowserSync(parameters.imgFiles, ['copy-images-to-dist']);
         });
 
         var prefix = 'bs-';
@@ -99,7 +100,9 @@
                 }
                 browserSyncTaskNames.push(taskNameToBrowserSyncTaskName[taskName]);
             });
-            gulp.watch(filePatterns, browserSyncTaskNames);
+            return watch(filePatterns, function() {
+                gulp.start(browserSyncTaskNames);
+            });
         }
 
         function buildBrowserSyncTaskDecorator(taskName) {
