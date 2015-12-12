@@ -4,32 +4,37 @@
     function buildDefinition(parameters) {
 
         var gulp = require('gulp-help')(require('gulp')),
+        // common gulp
             watch = require('gulp-watch'),
             concat = require('gulp-concat'),
+            inject = require("gulp-inject"),
+            debug = require('gulp-debug'),
+            rename = require('gulp-rename'),
+            rev = require('gulp-rev'),
+        // stream
+            addStream = require('add-stream'),
+            runSequence = require('run-sequence'),
+        // img
+            imagemin = require('gulp-imagemin'),
+        // js
+            eslint = require('gulp-eslint'),
+            uglify = require('gulp-uglify'),
+            ngAnnotate = require('gulp-ng-annotate'),
+        // css
             less = require('gulp-less'),
             minCss = require('gulp-minify-css'),
             autoprefixer = require('gulp-autoprefixer'),
-            uglify = require('gulp-uglify'),
-            inject = require("gulp-inject"),
-            debug = require('gulp-debug'),
-            eslint = require('gulp-eslint'),
-            rename = require('gulp-rename'),
-            rev = require('gulp-rev'),
-            runSequence = require('run-sequence'),
-            del = require('del'),
-            path = require('path'),
-            utils = require('./gulp.utils')(parameters),
-            ngAnnotate = require('gulp-ng-annotate'),
-            browserSync = require('browser-sync').create(),
-            addStream = require('add-stream'),
-            imagemin = require('gulp-imagemin'),
-
-        // for templates merge
+        // template
             header = require('gulp-header'),
             footer = require('gulp-footer'),
             beautify = require('gulp-beautify'),
             ngHtml2js = require('gulp-ng-html2js'),
-            minifyHtml = require('gulp-minify-html');
+            minifyHtml = require('gulp-minify-html'),
+        // others
+            del = require('del'),
+            path = require('path'),
+            utils = require('./gulp.utils')(parameters),
+            browserSync = require('browser-sync').create();
 
         /**
          * @description Build tasks : Merge all the files of the application and dependencies to the dist folder and
