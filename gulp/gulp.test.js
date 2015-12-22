@@ -19,11 +19,12 @@
             runKarmaOnSourceCode({singleRun: false}, done);
         });
         gulp.task('test-c', 'Start a single run of all unit tests and build a coverage summary.', ['merge-template-files-to-dist'], function (done) {
+            var preprocessor = {};
+            preprocessor[parameters.jsFilesToCover] = 'coverage';
+
             runKarmaOnSourceCode({
                 singleRun: true,
-                preprocessors: {
-                    'app/src/js/**/*.js': 'coverage'
-                },
+                preprocessors: preprocessor,
                 reporters: ['coverage'],
                 coverageReporter: {
                     type: 'text-summary'

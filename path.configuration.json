@@ -10,6 +10,7 @@
     "./app/src/js/**/*.factory.js",
     "./app/src/js/**/*.repository.js"
   ],
+  "jsFilesToCover": "app/src/js/**/*.js",
   "jsTestFiles": [
     "./app/src/js/**/*.spec.js"
   ],
@@ -17,13 +18,13 @@
     "./app/src/css/**/*.css",
     "!./app/src/css/**/*.min.css"
   ],
-  "lessFiles":[
+  "lessFiles": [
     "./app/src/css/**/*.less"
   ],
   "htmlTemplateFiles": [
     "./app/src/js/**/*.html"
   ],
-  "imgFiles":[
+  "imgFiles": [
     "./app/src/img/*"
   ],
   "startupFile": "./app/src/index.html",
@@ -33,6 +34,5 @@
   "libraryFileName": "libraries",
   "karmaFilePath": "./app/karma.conf.js",
   "templateModuleName": "templates",
-
   "bowerJsonFolderPath": "./app/"
 }
