@@ -22,7 +22,7 @@
             runKarmaOnSourceCode({
                 singleRun: true,
                 preprocessors: {
-                    'app/js/**/*.js': 'coverage'
+                    'app/src/js/**/*.js': 'coverage'
                 },
                 reporters: ['coverage'],
                 coverageReporter: {

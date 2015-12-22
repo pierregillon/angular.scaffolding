@@ -2,8 +2,8 @@
     'use strict';
 
     var path = require('path');
-    var parameters = require('./path.configuration.json');
-    var utils = require('./gulp/gulp.utils')(parameters);
+    var parameters = require('../path.configuration.json');
+    var utils = require('../gulp/gulp.utils')(parameters);
 
     var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
         .concat(parameters.jsFiles)
@@ -12,7 +12,7 @@
 
     var karmaConfiguration = function (config) {
         config.set({
-            basePath: '',
+            basePath: '..',
             frameworks: ['jasmine', 'sinon-chai'],
             files: files,
             exclude: [],

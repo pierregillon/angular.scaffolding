@@ -1,38 +1,38 @@
 {
   "jsFiles": [
-    "./app/js/**/*.module.js",
-    "./app/js/**/*.configuration.js",
-    "./app/js/**/*.constant.js",
-    "./app/js/**/*.controller.js",
-    "./app/js/**/*.directive.js",
-    "./app/js/**/*.service.js",
-    "./app/js/**/*.filter.js",
-    "./app/js/**/*.factory.js",
-    "./app/js/**/*.repository.js"
+    "./app/src/js/**/*.module.js",
+    "./app/src/js/**/*.configuration.js",
+    "./app/src/js/**/*.constant.js",
+    "./app/src/js/**/*.controller.js",
+    "./app/src/js/**/*.directive.js",
+    "./app/src/js/**/*.service.js",
+    "./app/src/js/**/*.filter.js",
+    "./app/src/js/**/*.factory.js",
+    "./app/src/js/**/*.repository.js"
   ],
   "jsTestFiles": [
-    "./app/js/**/*.spec.js"
+    "./app/src/js/**/*.spec.js"
   ],
   "cssFiles": [
-    "./app/css/**/*.css",
-    "!./app/css/**/*.min.css"
+    "./app/src/css/**/*.css",
+    "!./app/src/css/**/*.min.css"
   ],
   "lessFiles":[
-    "./app/css/**/*.less"
+    "./app/src/css/**/*.less"
   ],
   "htmlTemplateFiles": [
-    "./app/js/**/*.html"
+    "./app/src/js/**/*.html"
   ],
   "imgFiles":[
-    "./app/img/*"
+    "./app/src/img/*"
   ],
-  "startupFile": "./app/index.html",
-  "distFolderPath": "./dist",
+  "startupFile": "./app/src/index.html",
+  "distFolderPath": "./app/dist",
   "applicationFileName": "application",
   "templateFileName": "templates",
   "libraryFileName": "libraries",
-  "karmaFilePath": "./karma.conf.js",
+  "karmaFilePath": "./app/karma.conf.js",
   "templateModuleName": "templates",
 
-  "bowerJsonFolderPath": "./"
+  "bowerJsonFolderPath": "./app/"
 }
