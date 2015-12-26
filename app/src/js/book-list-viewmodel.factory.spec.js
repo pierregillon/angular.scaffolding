@@ -16,8 +16,9 @@
             bookRepository.getBooks = sinon.stub().returns($q.when([]));
         }));
 
-        it('should be a defined class.', function () {
+        it('should be a class.', function () {
             expect(BookListViewModel).to.be.a('function');
+            expect(BookListViewModel.constructor).to.be.a('function');
         });
 
         describe('[behaviours]', function () {
