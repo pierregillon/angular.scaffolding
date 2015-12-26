@@ -6,10 +6,9 @@
         .controller('bookListController', controller);
 
     /* @ngInject */
-    function controller(BookListViewModel) {
-        var self = this;
-
-        self.viewModel = new BookListViewModel();
+    function controller($scope, BookListViewModel) {
+        $scope.viewModel = new BookListViewModel();
+        $scope.viewModel.load();
     }
 
 })(window.angular);

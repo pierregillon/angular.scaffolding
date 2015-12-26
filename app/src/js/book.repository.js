@@ -6,11 +6,15 @@
         .service('bookRepository', service);
 
     /* @ngInject */
-    function service() {
+    function service($q) {
         var self = this;
 
-        self.getBooks = function(){
-
+        self.getBooks = function () {
+            return $q.when([
+                {name: 'book1'},
+                {name: 'book2'},
+                {name: 'book3'}
+            ]);
         };
     }
 
