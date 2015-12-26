@@ -20,7 +20,7 @@
             expect(BookListViewModel).to.be.a('function');
         });
 
-        describe('[behaviours]', function(){
+        describe('[behaviours]', function () {
             var viewModel;
 
             beforeEach(angular.mock.inject(function (_bookRepository_, $q, _$rootScope_) {
@@ -32,39 +32,39 @@
                 bookRepository.getBooks = sinon.stub().returns($q.when([]));
             }));
 
-            it('should have a load method', function(){
+            it('should have a load method', function () {
                 expect(viewModel.load).to.be.a('function');
             });
 
-            it('should have an empty collection of books by default.', function(){
+            it('should have an empty collection of books by default.', function () {
                 expect(viewModel.books).to.be.an('array');
                 expect(viewModel.books).to.have.length(0);
             });
 
-            it('should not be in loading state by default.', function(){
+            it('should not be in loading state by default.', function () {
                 expect(viewModel.isLoading).to.equal(false);
             });
 
-            it('should request first 30 books from repository when loaded.', function(){
+            it('should request first 30 books from repository when loaded.', function () {
                 viewModel.load();
 
                 expect(bookRepository.getBooks).to.have.been.calledWith(0, 30);
             });
 
-            it('should be in loading state when processing a load operation.', function(){
+            it('should be in loading state when processing a load operation.', function () {
                 viewModel.load();
 
                 expect(viewModel.isLoading).to.equal(true);
             });
 
-            it('should not be in loading state when load completed.', function(){
+            it('should not be in loading state when load completed.', function () {
                 viewModel.load();
                 $rootScope.$apply();
 
                 expect(viewModel.isLoading).to.equal(false);
             });
 
-            it('should set book collection from book repository when loaded.', angular.mock.inject(function($q){
+            it('should set book collection from book repository when loaded.', angular.mock.inject(function ($q) {
                 bookRepository.getBooks.returns($q.when([{}, {}]));
 
                 viewModel.load();
