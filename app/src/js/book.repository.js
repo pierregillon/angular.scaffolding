@@ -6,15 +6,19 @@
         .service('bookRepository', service);
 
     /* @ngInject */
-    function service($q) {
+    function service($q, $timeout) {
         var self = this;
 
         self.getBooks = function () {
-            return $q.when([
-                {name: 'book1'},
-                {name: 'book2'},
-                {name: 'book3'}
-            ]);
+            var deferred = $q.defer();
+            $timeout(function () {
+                deferred.resolve([
+                    {name: 'book1'},
+                    {name: 'book2'},
+                    {name: 'book3'}
+                ]);
+            }, 1000);
+            return deferred.promise;
         };
     }
 

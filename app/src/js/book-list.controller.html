@@ -1,4 +1,10 @@
 <h2>Book list</h2>
-<div ng-repeat="book in viewModel.books">
+
+<div ng-if="viewModel.isLoading">
+    Loading ...
+</div>
+
+<div ng-if="!viewModel.isLoading"
+     ng-repeat="book in viewModel.books">
     {{book.name}}
 </div>
