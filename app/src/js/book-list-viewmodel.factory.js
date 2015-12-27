@@ -6,7 +6,7 @@
         .factory('BookListViewModel', factory);
 
     /* @ngInject */
-    function factory(bookRepository) {
+    function factory(bookRepository, card) {
         return BookListViewModel;
 
         function BookListViewModel() {
@@ -22,6 +22,12 @@
                     });
                     self.isLoading = false;
                 });
+            };
+            self.addBookToCard = function(book){
+                if(self.books.indexOf(book) === -1){
+                    throw new Error('Cannot add a book that is not in the current book collection.');
+                }
+                return card.add(book.id);
             };
         }
     }

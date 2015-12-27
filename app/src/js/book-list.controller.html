@@ -6,5 +6,6 @@
 
 <div ng-if="!viewModel.isLoading"
      ng-repeat="book in viewModel.books">
+    <button ng-click="viewModel.addBookToCard(book)">Add to card</button>
     {{book.name}}
 </div>

@@ -13,9 +13,9 @@
             var deferred = $q.defer();
             $timeout(function () {
                 deferred.resolve([
-                    {name: 'book1'},
-                    {name: 'book2'},
-                    {name: 'book3'}
+                    {id: 1, name: 'book1'},
+                    {id: 2, name: 'book2'},
+                    {id: 3, name: 'book3'}
                 ]);
             }, 1000);
             return deferred.promise;
