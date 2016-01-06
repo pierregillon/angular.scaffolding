@@ -3,7 +3,7 @@
 
     var path = require('path');
     var lodash = require('lodash');
-    var parameters = require('../path.configuration.json');
+    var parameters = require('../path.configuration.js');
     var utils = require('../gulp/gulp.utils')(parameters);
 
     var karmaConfiguration = function (config) {
