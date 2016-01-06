@@ -2,20 +2,15 @@
     'use strict';
 
     var path = require('path');
+    var lodash = require('lodash');
     var parameters = require('../path.configuration.json');
     var utils = require('../gulp/gulp.utils')(parameters);
-
-    var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
-        .concat('./app/test.configuration.js')
-        .concat(parameters.jsFiles)
-        .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '.js'))
-        .concat(parameters.jsTestFiles);
 
     var karmaConfiguration = function (config) {
         config.set({
             basePath: '..',
             frameworks: ['jasmine'],
-            files: files,
+            files: getFiles(config.loadProductionCode),
             exclude: [],
             reporters: ['progress'],
             port: 9876,
@@ -27,6 +22,33 @@
             concurrency: Infinity
         });
     };
+
+    function getFiles(loadProductionCode) {
+        var files = [];
+
+        if (loadProductionCode) {
+            files = files
+                .concat(path.join(parameters.distFolderPath, parameters.libraryFileName + '*js'))
+                .concat(path.join(parameters.distFolderPath, parameters.applicationFileName + '*js'))
+                .concat(lodash.difference ( // Get only dev dependencies, without prod dependencies
+                    utils.bower.getJsLibraries({devDependencies: true, dependencies: false}),
+                    utils.bower.getJsLibraries({devDependencies: false, dependencies: true})
+                ));
+        }
+
+        else {
+            files = files
+                .concat(utils.bower.getJsLibraries({devDependencies: true, dependencies: true}))
+                .concat(parameters.jsFiles);
+        }
+
+        files = files
+            .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '*js'))
+            .concat('./app/test.configuration.js')
+            .concat(parameters.jsTestFiles);
+
+        return files;
+    }
 
     module.exports = karmaConfiguration;
 })(module, require);

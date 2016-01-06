@@ -51,13 +51,8 @@
 
         // ----- Utils
         function runKarmaOnDistCode(configuration, done) {
-            var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
-                .concat(parameters.jsTestFiles)
-                .concat(path.join(parameters.distFolderPath, parameters.applicationFileName + '*js'))
-                .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '*js'));
-
             configuration.configFile = path.resolve(parameters.karmaFilePath);
-            configuration.files = files;
+            configuration.loadProductionCode = true;
 
             var server = new karma.Server(configuration, function (exitCode) {
                 if (exitCode !== 0) {
@@ -72,6 +67,8 @@
 
         function runKarmaOnSourceCode(configuration, done) {
             configuration.configFile = path.resolve(parameters.karmaFilePath);
+            configuration.loadProductionCode = false;
+
             var server = new karma.Server(configuration, function () {
                 done();
             });
