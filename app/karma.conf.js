@@ -6,6 +6,7 @@
     var utils = require('../gulp/gulp.utils')(parameters);
 
     var files = utils.bower.getJsLibraries({devDependencies: true, dependencies: true})
+        .concat('./app/test.configuration.js')
         .concat(parameters.jsFiles)
         .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '.js'))
         .concat(parameters.jsTestFiles);
@@ -13,7 +14,7 @@
     var karmaConfiguration = function (config) {
         config.set({
             basePath: '..',
-            frameworks: ['jasmine', 'sinon-chai'],
+            frameworks: ['jasmine'],
             files: files,
             exclude: [],
             reporters: ['progress'],
