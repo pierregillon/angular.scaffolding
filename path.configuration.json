@@ -14,6 +14,9 @@
   "jsSpecFiles": [
     "./app/src/js/**/*.spec.js"
   ],
+  "jsToolTestFiles": [
+    "./app/test.configuration.js"
+  ],
   "cssFiles": [
     "./app/src/css/**/*.css",
     "!./app/src/css/**/*.min.css"

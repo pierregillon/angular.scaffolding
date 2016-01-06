@@ -44,7 +44,7 @@
 
         files = files
             .concat(path.join(parameters.distFolderPath, parameters.templateFileName + '*js'))
-            .concat('./app/test.configuration.js')
+            .concat(parameters.jsToolTestFiles)
             .concat(parameters.jsSpecFiles);
 
         return files;
