@@ -172,7 +172,7 @@
             self.build = function () {
                 var jsFilesToBuild = []
                     .concat(parameters.jsFiles)
-                    .concat(concatForeach('!', parameters.jsTestFiles));
+                    .concat(concatForeach('!', parameters.jsSpecFiles));
 
                 var process = gulp.src(jsFilesToBuild);
 

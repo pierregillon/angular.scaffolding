@@ -11,7 +11,7 @@
     "./app/src/js/**/*.repository.js"
   ],
   "jsFilesToCover": "app/src/js/**/*.js",
-  "jsTestFiles": [
+  "jsSpecFiles": [
     "./app/src/js/**/*.spec.js"
   ],
   "cssFiles": [
