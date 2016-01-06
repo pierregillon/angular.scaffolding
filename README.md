@@ -1,4 +1,4 @@
-#Angular scaffolding project
+#Angular scaffolding project (Typescript)
 
 ##Introduction
 Building an angular application is not very complex, but there is lots of a plumbing !
@@ -39,18 +39,23 @@ Bower is used to download packages that are required for the web application : a
     npm install
     cd app
     bower install
+
+3 - Install typescript definitions
+
+    cd app
+    tsd install
     
-3 - Initialize your package.json and bower.json with the right project name, description and version.
+4 - Initialize your package.json and bower.json with the right project name, description and version.
 
     npm init
     cd app
     bower init
 
-4 - Initialize your eslint favourite syntax
+5 - Initialize your eslint favourite syntax
 
     eslint --init
     
-5 - Nothing more, you are ready to create your application.
+6 - Nothing more, you are ready to create your application.
 
 ##Overview of the TDD flow
 1 - Run the continuous test task
