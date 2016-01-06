@@ -33,6 +33,7 @@
     "gulp-ng-html2js": "^0.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-rev": "^6.0.1",
+    "gulp-typescript": "^2.10.0",
     "gulp-uglify": "^1.4.2",
     "gulp-watch": "^4.3.5",
     "jasmine-core": "^2.3.4",
@@ -41,8 +42,11 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-spec-reporter": "0.0.22",
+    "karma-typescript-preprocessor": "0.0.21",
     "phantomjs": "^1.9.18",
     "run-sequence": "^1.1.4",
+    "tsd": "^0.6.5",
+    "typescript": "^1.7.5",
     "wiredep": "^2.2.2"
   },
   "dependencies": {

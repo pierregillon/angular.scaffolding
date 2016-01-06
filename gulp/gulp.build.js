@@ -20,6 +20,7 @@
             eslint = require('gulp-eslint'),
             uglify = require('gulp-uglify'),
             ngAnnotate = require('gulp-ng-annotate'),
+            typescript = require('gulp-typescript'),
         // css
             less = require('gulp-less'),
             minCss = require('gulp-minify-css'),
@@ -174,7 +175,9 @@
                     .concat(parameters.jsFiles)
                     .concat(concatForeach('!', parameters.jsSpecFiles));
 
-                var process = gulp.src(jsFilesToBuild);
+                var process = gulp
+                    .src(jsFilesToBuild)
+                    .pipe(typescript({noImplicitAny: true}));
 
                 if (self.shouldInjectDependencyNamesInAngularFunction) {
                     process = process.pipe(ngAnnotate({
@@ -183,12 +186,12 @@
                     }));
                 }
 
-                if (self.shouldValidateSyntax) {
-                    process = process
-                        .pipe(eslint())
-                        .pipe(eslint.format())
-                        .pipe(eslint.failAfterError());
-                }
+                //if (self.shouldValidateSyntax) {
+                //    process = process
+                //        .pipe(eslint())
+                //        .pipe(eslint.format())
+                //        .pipe(eslint.failAfterError());
+                //}
 
                 if (self.shouldMinifyJs) {
                     process = process

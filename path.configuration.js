@@ -9,15 +9,16 @@
 
         // Where javascript files of the application are located.
         'jsFiles': [
-            './app/src/js/**/*.module.js',
-            './app/src/js/**/*.configuration.js',
-            './app/src/js/**/*.constant.js',
-            './app/src/js/**/*.controller.js',
-            './app/src/js/**/*.directive.js',
-            './app/src/js/**/*.service.js',
-            './app/src/js/**/*.filter.js',
-            './app/src/js/**/*.factory.js',
-            './app/src/js/**/*.repository.js'
+            './app/src/js/**/*.model.ts',
+            './app/src/js/**/*.module.ts',
+            './app/src/js/**/*.configuration.ts',
+            './app/src/js/**/*.constant.ts',
+            './app/src/js/**/*.controller.ts',
+            './app/src/js/**/*.directive.ts',
+            './app/src/js/**/*.service.ts',
+            './app/src/js/**/*.filter.ts',
+            './app/src/js/**/*.factory.ts',
+            './app/src/js/**/*.repository.ts'
         ],
 
         // Where css files of the application are located.
@@ -56,7 +57,7 @@
 
         // Javascript specification files that contains application tests.
         'jsSpecFiles': [
-            './app/src/js/**/*.spec.js'
+            './app/src/js/**/*.spec.ts'
         ],
 
         // Javascript files to add in karma that contains test utilities.
