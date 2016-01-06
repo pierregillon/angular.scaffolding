@@ -32,18 +32,20 @@ Npm is used to download packages that are useful for the project environment plu
 Bower is used to download packages that are required for the web application : angular, lodash, ...
 
 ##How to start ?
-1 - Copy the full project
+1 - Clone or copy the full project
 
 2 - Install packages
 
     npm install
+    cd app
     bower install
     
-3 - Initialize your package.json and bower.json with right project name, description and version.
+3 - Initialize your package.json and bower.json with the right project name, description and version.
 
     npm init
+    cd app
     bower init
-    
+
 4 - Initialize your eslint favourite syntax
 
     eslint --init
