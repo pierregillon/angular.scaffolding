@@ -1,4 +1,7 @@
-#Angular scaffolding project
+#Angular scaffolding project (Pure javascript)
+
+If you prefer typescript see the other branch **typescript** of this repository :
+* [angular scaffolding with typescript](https://github.com/pierregillon/angular.scaffolding/tree/typescript)
 
 ##Introduction
 Building an angular application is not very complex, but there is lots of a plumbing !
